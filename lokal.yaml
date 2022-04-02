@@ -1,0 +1,11 @@
+name: "test"
+workspaces:
+  - name: "ci"
+    apps:
+      - name: service
+        repository:
+          localPath: "./service"
+          repoPath: "git@github.com:vargaadam/ticketing-system.git"
+        manifest: ""
+        build: ""
+        deploy: ""
