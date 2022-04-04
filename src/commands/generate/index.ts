@@ -1,7 +1,7 @@
 import path from "path";
 import { Yaml } from "../../content/base/yaml";
 import { Command, Flags } from "@oclif/core";
-import { Manifests } from "../../manifests";
+import { ManifestContainer } from "../../manifests/container";
 import { Workspace, WorkspaceOptions } from "../../modules/workspace";
 import { AppOptions } from "../../modules/app";
 

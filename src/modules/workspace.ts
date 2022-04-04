@@ -1,56 +1,71 @@
-import { Manifests } from "../manifests";
+import { ManifestContainer } from "../manifests/container";
 import { App, AppOptions } from "./app";
+
+export interface WorkspaceAppOptions {
+  name: string;
+  alias?: string;
+  portForward?: number;
+}
 
 export interface WorkspaceOptions {
   name: string;
-  apps: { name: string }[];
+  apps: WorkspaceAppOptions[];
 }
 
 export class Workspace {
   constructor(
-    private workspace: WorkspaceOptions,
-    private apps: AppOptions[]
+    private workspaceOptions: WorkspaceOptions,
+    private appsOptions: AppOptions[]
   ) {}
 
   async initApps() {
-    const workspaceApps = this.getWorkspaceApps();
+    const appsOptions = this.getWorkspaceApps();
 
     await Promise.all(
-      workspaceApps.map((workspaceApp) =>
-        new App(workspaceApp).initRepositories()
-      )
+      appsOptions.map((appOptions) => {
+        const additionalAppOptions = this.workspaceOptions.apps.find(
+          (workspaceAppOptions) => appOptions.name === workspaceAppOptions.name
+        );
+
+        return new App(appOptions, additionalAppOptions!).initRepository();
+      })
     );
   }
 
   async generateManifests() {
-    const workspaceApps = this.getWorkspaceApps();
-
-    const manifest = new Manifests(this.workspace.name);
+    const appsOptions = this.getWorkspaceApps();
+    const manifestContainer = new ManifestContainer(this.workspaceOptions.name);
 
     await Promise.all(
-      workspaceApps
-        .filter((workspaceApp) => workspaceApp.manifests)
-        .map((filteredWorkspaceApp) =>
-          manifest.synth(
-            filteredWorkspaceApp.name,
-            filteredWorkspaceApp.manifests
-          )
-        )
+      appsOptions
+        .filter((appOptions) => appOptions.manifests)
+        .map((appOptions) => {
+          const additionalAppOptions = this.workspaceOptions.apps.find(
+            (workspaceAppOptions) =>
+              workspaceAppOptions.name === appOptions.name
+          );
+
+          return new App(appOptions, additionalAppOptions!).initManifests(
+            manifestContainer
+          );
+        })
     );
+
+    manifestContainer.synth();
   }
 
   private getWorkspaceApps() {
-    const appsObject = this.apps.reduce((act, current) => {
+    const appsOptionsObject = this.appsOptions.reduce((act, current) => {
       act[current.name] = current;
       return act;
     }, {} as { [kes: string]: AppOptions });
 
-    const workspaceApps = Object.keys(appsObject)
+    const workspaceAppsOptions = Object.keys(appsOptionsObject)
       .filter((appName) =>
-        this.workspace.apps.find((app) => app.name === appName)
+        this.workspaceOptions.apps.find((app) => app.name === appName)
       )
-      .map((workspaceApp) => appsObject[workspaceApp]);
+      .map((workspaceApp) => appsOptionsObject[workspaceApp]);
 
-    return workspaceApps;
+    return workspaceAppsOptions;
   }
 }
