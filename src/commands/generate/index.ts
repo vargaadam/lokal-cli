@@ -1,8 +1,8 @@
 import path from "path";
-import { Yaml } from "../../content/yaml";
+import { Yaml } from "../../content/base/yaml";
 import { Command, Flags } from "@oclif/core";
-import { Manifest } from "../../manifests";
-import { WorkspaceOptions } from "../../modules/workspace";
+import { Manifests } from "../../manifests";
+import { Workspace, WorkspaceOptions } from "../../modules/workspace";
 import { AppOptions } from "../../modules/app";
 
 interface LokalConfig {
@@ -14,37 +14,26 @@ interface LokalConfig {
 const CONFIG_FILE_NAME = "lokal.yaml";
 
 export default class Generate extends Command {
-  static examples = ["$ lkl generate"];
+  static examples = ["$ lkl generate --workspace"];
+
+  static flags = {
+    workspace: Flags.string({ char: "w" }),
+  };
 
   async run(): Promise<void> {
+    const { flags } = await this.parse(Generate);
+
     const configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
     const { workspaces, apps } = new Yaml<LokalConfig>(configFilePath).parse();
 
-    const appsObject = apps.reduce((act, current) => {
-      act[current.name] = current;
-      return act;
-    }, {} as { [kes: string]: any });
+    const filteredWorkspace = flags.workspace
+      ? workspaces.filter((workspace) => workspace.name === flags.workspace)
+      : workspaces;
 
-    const workspaceMap = new Map<string, string[]>();
-
-    workspaces.forEach((workspace) => {
-      const workspaceApps = Object.keys(appsObject).filter((appName) =>
-        workspace.apps.find((app) => app.name === appName)
-      );
-
-      workspaceMap.set(workspace.name, workspaceApps);
-    });
-
-    for await (const entry of workspaceMap.entries()) {
-      const workspaceName = entry[0];
-      const workspaceApps = entry[1];
-
-      const manifest = new Manifest(workspaceName);
-
-      workspaceApps.forEach((appName, i) => {
-        const app = appsObject[appName] as AppOptions;
-        manifest.generate(appName, app.manifests);
-      });
-    }
+    Promise.all(
+      filteredWorkspace.map((workspace) =>
+        new Workspace(workspace, apps).generateManifests()
+      )
+    );
   }
 }

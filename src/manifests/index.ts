@@ -3,7 +3,7 @@ import { AppProps } from "cdk8s";
 import * as kplus from "cdk8s-plus-22";
 import { AppManifests } from "./interfaces";
 
-export class Manifest {
+export class Manifests {
   private app: k.App;
   private chart: k.Chart;
 
@@ -12,7 +12,7 @@ export class Manifest {
     this.chart = new k.Chart(this.app, this.workspaceName);
   }
 
-  generate(appName: string, manifestOptions: AppManifests) {
+  synth(appName: string, manifestOptions: AppManifests) {
     if (manifestOptions.deployment?.enabled) {
       this.createDeployment(this.chart, appName);
     }

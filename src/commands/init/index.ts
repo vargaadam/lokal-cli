@@ -1,5 +1,5 @@
 import path from "path";
-import { Yaml } from "../../content/yaml";
+import { Yaml } from "../../content/base/yaml";
 import { Workspace } from "../../modules/workspace";
 import { Command, Flags } from "@oclif/core";
 import { WorkspaceOptions } from "../../modules/workspace";
