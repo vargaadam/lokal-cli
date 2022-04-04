@@ -1,4 +1,4 @@
-import { ManifestContainer } from "../manifests/container";
+import { ManifestContainer } from "./manifests/container";
 import { App, AppOptions } from "./app";
 
 export interface WorkspaceAppOptions {

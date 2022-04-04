@@ -1,12 +1,12 @@
 import { Repository, RepositoryOptions } from "./repository";
-import { AppManifests } from "../manifests/interfaces";
-import { ManifestContainer } from "../manifests/container";
+import { ManifestOptions } from "./manifests/interfaces/manifest";
+import { ManifestContainer } from "./manifests/container";
 import { WorkspaceAppOptions } from "./workspace";
 
 export interface AppOptions {
   name: string;
   repository: RepositoryOptions;
-  manifests: AppManifests;
+  manifests: ManifestOptions;
 }
 
 export class App {

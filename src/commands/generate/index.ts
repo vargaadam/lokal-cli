@@ -1,7 +1,6 @@
 import path from "path";
 import { Yaml } from "../../content/base/yaml";
 import { Command, Flags } from "@oclif/core";
-import { ManifestContainer } from "../../manifests/container";
 import { Workspace, WorkspaceOptions } from "../../modules/workspace";
 import { AppOptions } from "../../modules/app";
 
@@ -30,7 +29,7 @@ export default class Generate extends Command {
       ? workspaces.filter((workspace) => workspace.name === flags.workspace)
       : workspaces;
 
-    Promise.all(
+    await Promise.all(
       filteredWorkspace.map((workspace) =>
         new Workspace(workspace, apps).generateManifests()
       )
