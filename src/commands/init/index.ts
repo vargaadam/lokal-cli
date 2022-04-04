@@ -1,33 +1,16 @@
-import path from "path";
-import { Yaml } from "../../content/base/yaml";
 import { Workspace } from "../../modules/workspace";
-import { Command, Flags } from "@oclif/core";
-import { WorkspaceOptions } from "../../modules/workspace";
-import { AppOptions } from "../../modules/app";
+import BaseCommand from "../../base-command";
 
-interface LokalConfig {
-  name: string;
-  workspaces: WorkspaceOptions[];
-  apps: AppOptions[];
-}
-
-const CONFIG_FILE_NAME = "lokal.yaml";
-
-export default class Init extends Command {
-  static examples = ["$ lkl init --workspace"];
-
-  static flags = {
-    workspace: Flags.string({ char: "w" }),
-  };
+export default class Init extends BaseCommand {
+  static examples = ["$ lkl init --workspace WORKSPACE"];
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(Init);
+    const { workspaces, apps } = this.lokalConfig;
 
-    const configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
-    const { workspaces, apps } = new Yaml<LokalConfig>(configFilePath).parse();
-
-    const filteredWorkspace = flags.workspace
-      ? workspaces.filter((workspace) => workspace.name === flags.workspace)
+    const filteredWorkspace = this.selectedWorkspace
+      ? workspaces.filter(
+          (workspace) => workspace.name === this.selectedWorkspace
+        )
       : workspaces;
 
     await Promise.all(

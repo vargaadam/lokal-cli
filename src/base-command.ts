@@ -1,0 +1,31 @@
+import path from "path";
+import { Yaml } from "./content/base/yaml";
+import { Command, Flags } from "@oclif/core";
+import { AppOptions } from "./modules/app";
+import { WorkspaceOptions } from "./modules/workspace";
+
+interface LokalConfig {
+  name: string;
+  workspaces: WorkspaceOptions[];
+  apps: AppOptions[];
+}
+
+const CONFIG_FILE_NAME = "lokal.yaml";
+
+export default abstract class BaseCommand extends Command {
+  protected selectedWorkspace!: string;
+  protected lokalConfig!: LokalConfig;
+
+  static flags = {
+    workspace: Flags.string({ char: "w", required: true }),
+  };
+
+  async init() {
+    const { flags } = await this.parse(BaseCommand);
+
+    const configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
+    this.lokalConfig = new Yaml<LokalConfig>(configFilePath).parse();
+
+    this.selectedWorkspace = flags.workspace;
+  }
+}
