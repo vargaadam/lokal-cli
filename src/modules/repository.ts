@@ -1,3 +1,4 @@
+import path from "path";
 import { Resource } from "../git/resource";
 
 export interface RepositoryOptions {
@@ -9,11 +10,12 @@ export interface RepositoryOptions {
 export class Repository {
   private resource: Resource;
 
-  constructor(repositoryOptions: RepositoryOptions) {
-    this.resource = new Resource(
-      repositoryOptions.repoPath,
-      repositoryOptions.localPath
-    );
+  constructor(repositoryOptions: RepositoryOptions, workingDir?: string) {
+    const localPath = workingDir
+      ? path.join(workingDir, repositoryOptions.localPath)
+      : repositoryOptions.localPath;
+
+    this.resource = new Resource(repositoryOptions.repoPath, localPath);
   }
 
   init() {

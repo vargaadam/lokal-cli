@@ -1,5 +1,7 @@
+import path from "path";
 import { ManifestContainer } from "./manifests/container";
 import { App, AppOptions } from "./app";
+import { Skaffold } from "../content/skaffold";
 
 export interface WorkspaceAppOptions {
   name: string;
@@ -12,29 +14,47 @@ export interface WorkspaceOptions {
   apps: WorkspaceAppOptions[];
 }
 
+const WORKING_DIR_NAME = ".lokal";
+
 export class Workspace {
+  private workingDir: string;
+
   constructor(
     private workspaceOptions: WorkspaceOptions,
     private appsOptions: AppOptions[]
-  ) {}
+  ) {
+    this.workingDir = path.join(process.cwd(), WORKING_DIR_NAME);
+  }
 
   async initApps() {
     const appsOptions = this.getWorkspaceApps();
 
     await Promise.all(
-      appsOptions.map((appOptions) => {
-        const additionalAppOptions = this.workspaceOptions.apps.find(
-          (workspaceAppOptions) => appOptions.name === workspaceAppOptions.name
-        );
+      appsOptions
+        .filter((appOptions) => appOptions.repository)
+        .map((appOptions) => {
+          const additionalAppOptions = this.workspaceOptions.apps.find(
+            (workspaceAppOptions) =>
+              appOptions.name === workspaceAppOptions.name
+          );
 
-        return new App(appOptions, additionalAppOptions!).initRepository();
-      })
+          return new App(appOptions, additionalAppOptions!).initRepository(
+            this.workingDir
+          );
+        })
     );
   }
 
   async generateManifests() {
     const appsOptions = this.getWorkspaceApps();
-    const manifestContainer = new ManifestContainer(this.workspaceOptions.name);
+    const manifestFileExtension = ".k8s.yaml";
+    const manifestContainer = new ManifestContainer(
+      this.workspaceOptions.name,
+      { outdir: this.workingDir, outputFileExtension: manifestFileExtension }
+    );
+    const skaffold = new Skaffold([
+      `${this.workingDir}/${this.workspaceOptions.name}${manifestFileExtension}`,
+    ]);
 
     await Promise.all(
       appsOptions
@@ -45,6 +65,8 @@ export class Workspace {
               workspaceAppOptions.name === appOptions.name
           );
 
+          skaffold.addArtifact(appOptions.build);
+
           return new App(appOptions, additionalAppOptions!).initManifests(
             manifestContainer
           );
@@ -52,6 +74,7 @@ export class Workspace {
     );
 
     manifestContainer.synth();
+    skaffold.persist(`${this.workingDir}/skaffold.yaml`);
   }
 
   private getWorkspaceApps() {

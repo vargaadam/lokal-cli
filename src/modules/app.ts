@@ -2,11 +2,13 @@ import { Repository, RepositoryOptions } from "./repository";
 import { ManifestOptions } from "./manifests/interfaces/manifest";
 import { ManifestContainer } from "./manifests/container";
 import { WorkspaceAppOptions } from "./workspace";
+import { BuildOptions } from "../content/skaffold";
 
 export interface AppOptions {
   name: string;
   repository: RepositoryOptions;
   manifests: ManifestOptions;
+  build: BuildOptions;
 }
 
 export class App {
@@ -15,8 +17,8 @@ export class App {
     private workspaceAppOptions: WorkspaceAppOptions
   ) {}
 
-  async initRepository() {
-    await new Repository(this.appOptions.repository).init();
+  async initRepository(workingDir: string) {
+    await new Repository(this.appOptions.repository, workingDir).init();
   }
 
   async initManifests(manifestContainer: ManifestContainer) {
@@ -24,7 +26,7 @@ export class App {
 
     if (deployment && deployment.enabled) {
       manifestContainer.createDeployment({
-        appName: this.appOptions.name,
+        appName: this.workspaceAppOptions.alias || this.appOptions.name,
         port: deployment.port,
         portForward: this.workspaceAppOptions.portForward,
       });

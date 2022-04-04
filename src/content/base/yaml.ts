@@ -1,14 +1,18 @@
+import fs from "fs";
 import YAML from "yaml";
-import { File } from "./file";
 
-export class Yaml<T> extends File {
-  constructor(filePath: string) {
-    super(filePath);
+export class Yaml {
+  content: any;
 
-    this.readFromFile();
+  load(path: string) {
+    const content = fs.readFileSync(path, "utf8");
+    this.content = YAML.parse(content);
+
+    return this.content;
   }
 
-  parse(): T {
-    return YAML.parse(this.content);
+  persist(path: string) {
+    const content = YAML.stringify(this.content);
+    fs.writeFileSync(path, content);
   }
 }

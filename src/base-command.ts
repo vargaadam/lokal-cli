@@ -1,6 +1,6 @@
 import path from "path";
-import { Yaml } from "./content/base/yaml";
 import { Command, Flags } from "@oclif/core";
+import { Yaml } from "./content/base/yaml";
 import { AppOptions } from "./modules/app";
 import { WorkspaceOptions } from "./modules/workspace";
 
@@ -24,7 +24,7 @@ export default abstract class BaseCommand extends Command {
     const { flags } = await this.parse(BaseCommand);
 
     const configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
-    this.lokalConfig = new Yaml<LokalConfig>(configFilePath).parse();
+    this.lokalConfig = new Yaml().load(configFilePath);
 
     this.selectedWorkspace = flags.workspace;
   }

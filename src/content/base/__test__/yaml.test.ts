@@ -11,10 +11,10 @@ describe("Yaml tests", () => {
     });
   });
 
-  describe("#parse", () => {
+  describe("#load", () => {
     it("should parse the yaml content", () => {
-      const yaml = new Yaml(filePath);
-      const content = yaml.parse();
+      const yaml = new Yaml();
+      const content = yaml.load(filePath);
 
       expect(content).toEqual([true, false, "maybe", null]);
     });
