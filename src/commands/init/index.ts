@@ -1,19 +1,19 @@
 import path from "path";
 import { Yaml } from "../../content/yaml";
-import { Workspace } from "../../workspace";
+import { Workspace } from "../../modules/workspace";
 import { Command, Flags } from "@oclif/core";
-import { WorkspaceOptions } from "../../workspace";
+import { WorkspaceOptions } from "../../modules/workspace";
+import { AppOptions } from "../../modules/app";
 
 interface LokalConfig {
   name: string;
   workspaces: WorkspaceOptions[];
+  apps: AppOptions[];
 }
 
 const CONFIG_FILE_NAME = "lokal.yaml";
 
 export default class Init extends Command {
-  static description = "Say hello";
-
   static examples = ["$ lkl init --workspace"];
 
   static flags = {
@@ -24,7 +24,7 @@ export default class Init extends Command {
     const { flags } = await this.parse(Init);
 
     const configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
-    const { workspaces } = new Yaml<LokalConfig>(configFilePath).parse();
+    const { workspaces, apps } = new Yaml<LokalConfig>(configFilePath).parse();
 
     const filteredWorkspace = flags.workspace
       ? workspaces.filter((workspace) => workspace.name === flags.workspace)
@@ -32,7 +32,7 @@ export default class Init extends Command {
 
     await Promise.all(
       filteredWorkspace.map((workspace) => {
-        return new Workspace(workspace).initApps();
+        return new Workspace(workspace, apps).initApps();
       })
     );
   }
