@@ -8,7 +8,7 @@
   },
   "homepage": "https://github.com/vargaadam/lokal-cli",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "repository": "vargaadam/lokal-cli",
   "files": [
     "/bin",
@@ -20,6 +20,9 @@
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.0.1",
+    "cdk8s": "^1.5.60",
+    "cdk8s-plus-22": "^1.0.0-beta.170",
+    "constructs": "^3.3.257",
     "simple-git": "^3.5.0",
     "yaml": "^1.10.2"
   },
@@ -28,6 +31,7 @@
     "@types/jest": "^27.4.1",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.9.4",
+    "cdk8s-cli": "^1.0.141",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
     "eslint-config-oclif-typescript": "^1.0.2",
@@ -44,7 +48,7 @@
   "oclif": {
     "bin": "lkl",
     "dirname": "lkl",
-    "commands": "./dist/commands",
+    "commands": "./dist/src/commands",
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-plugins"
@@ -52,12 +56,13 @@
     "topicSeparator": " ",
     "topics": {
       "init": {
-        "description": "Say hello to the world and others"
+        "description": "Init apps"
       }
     }
   },
   "scripts": {
-    "build": "shx rm -rf dist && tsc -b",
+    "gen": "cdk8s import k8s --language typescript",
+    "build": "shx rm -rf dist imports && npm run gen && tsc -b",
     "postpack": "shx rm -f oclif.manifest.json",
     "prepack": "npm run build && oclif manifest && oclif readme",
     "test": "jest --watchAll --no-cache",
@@ -70,5 +75,5 @@
   "keywords": [
     "oclif"
   ],
-  "types": "dist/index.d.ts"
+  "types": "dist/src/index.d.ts"
 }

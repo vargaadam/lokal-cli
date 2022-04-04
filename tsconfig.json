@@ -4,12 +4,17 @@
     "importHelpers": true,
     "module": "commonjs",
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "strict": true,
     "target": "es2019",
     "esModuleInterop": true
   },
+  "exclude": [
+    "node-modules",
+    "dist"
+  ],
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "imports/**/*"
   ]
 }
