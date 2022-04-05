@@ -61,7 +61,7 @@
     }
   },
   "scripts": {
-    "gen": "cdk8s import k8s --language typescript",
+    "gen": "cdk8s import k8s --language typescript --output ./src/imports",
     "build": "shx rm -rf dist imports && npm run gen && tsc -b",
     "postpack": "shx rm -f oclif.manifest.json",
     "prepack": "npm run build && oclif manifest && oclif readme",
