@@ -65,9 +65,21 @@ export class Workspace {
               workspaceAppOptions.name === appOptions.name
           );
 
+          const appName = additionalAppOptions?.alias || appOptions.name;
+
           skaffold.addArtifact(appOptions.build);
 
+          if (additionalAppOptions && additionalAppOptions.portForward) {
+            skaffold.addPortForward({
+              resourceName: appName,
+              port: appOptions.manifests!.deployment!.port,
+              localPort: additionalAppOptions.portForward,
+              namespace: "default",
+            });
+          }
+
           return new App(appOptions, additionalAppOptions!).initManifests(
+            appName,
             manifestContainer
           );
         })

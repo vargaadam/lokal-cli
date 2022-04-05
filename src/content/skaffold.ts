@@ -12,6 +12,14 @@ export interface BuildOptions {
   sync: BuildSyncOptions[];
 }
 
+export interface PortForwardOptions {
+  resourceType?: string;
+  resourceName: string;
+  namespace: string;
+  port: number;
+  localPort: number;
+}
+
 export class Skaffold extends Yaml {
   constructor(manifestsPaths: string[]) {
     super();
@@ -30,10 +38,18 @@ export class Skaffold extends Yaml {
         },
         artifacts: [],
       },
+      portForward: [],
     };
   }
 
   addArtifact(buildOptions: BuildOptions) {
     this.content.build.artifacts.push(buildOptions);
+  }
+
+  addPortForward(portForwardOptions: PortForwardOptions) {
+    this.content.portForward.push({
+      resourceType: portForwardOptions.resourceType || "Service",
+      ...portForwardOptions,
+    });
   }
 }

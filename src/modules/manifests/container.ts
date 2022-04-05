@@ -1,6 +1,7 @@
 import * as k from "cdk8s";
 import { AppProps } from "cdk8s";
 import * as kplus from "cdk8s-plus-22";
+import { ImagePullPolicy } from "cdk8s-plus-22";
 import { DeploymentOptions } from "./interfaces/deployment";
 
 export class ManifestContainer {
@@ -14,14 +15,19 @@ export class ManifestContainer {
 
   createDeployment(options: DeploymentOptions) {
     const deployment = new kplus.Deployment(this.chart, options.appName, {
-      containers: [{ image: "", port: options.port }],
+      containers: [
+        {
+          image: options.image,
+          port: options.port,
+          imagePullPolicy: ImagePullPolicy.NEVER,
+        },
+      ],
     });
 
-    if (options.portForward) {
-      deployment.exposeViaService({
-        targetPort: options.portForward,
-      });
-    }
+    deployment.exposeViaService({
+      name: options.appName,
+      port: options.port,
+    });
   }
 
   synth() {

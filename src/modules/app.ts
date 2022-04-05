@@ -21,12 +21,13 @@ export class App {
     await new Repository(this.appOptions.repository, workingDir).init();
   }
 
-  async initManifests(manifestContainer: ManifestContainer) {
+  async initManifests(appName: string, manifestContainer: ManifestContainer) {
     const deployment = this.appOptions.manifests.deployment;
 
     if (deployment && deployment.enabled) {
       manifestContainer.createDeployment({
-        appName: this.workspaceAppOptions.alias || this.appOptions.name,
+        appName,
+        image: this.appOptions.build.image,
         port: deployment.port,
         portForward: this.workspaceAppOptions.portForward,
       });
