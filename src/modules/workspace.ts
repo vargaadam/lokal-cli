@@ -103,16 +103,8 @@ export class Workspace {
   }
 
   private getAppWorkspaceOptions(appName: string) {
-    const workspaceAppOptions = this.workspaceOptions.apps.find(
+    return this.workspaceOptions.apps.find(
       (workspaceAppOptions) => appName === workspaceAppOptions.name
-    );
-
-    if (!workspaceAppOptions) {
-      throw new Error(
-        `No application defined with the specified application name: ${appName}`
-      );
-    }
-
-    return workspaceAppOptions;
+    ) as WorkspaceAppOptions;
   }
 }
