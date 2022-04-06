@@ -1,5 +1,5 @@
 import path from "path";
-import { Resource } from "../git/resource";
+import { Repository as GitRepository } from "../git/repository";
 
 export interface RepositoryOptions {
   name: string;
@@ -8,17 +8,20 @@ export interface RepositoryOptions {
 }
 
 export class Repository {
-  private resource: Resource;
+  private gitRepository: GitRepository;
 
   constructor(repositoryOptions: RepositoryOptions, workingDir?: string) {
     const localPath = workingDir
       ? path.join(workingDir, repositoryOptions.localPath)
       : repositoryOptions.localPath;
 
-    this.resource = new Resource(repositoryOptions.repoPath, localPath);
+    this.gitRepository = new GitRepository(
+      repositoryOptions.repoPath,
+      localPath
+    );
   }
 
   init() {
-    return this.resource.clone();
+    return this.gitRepository.clone();
   }
 }

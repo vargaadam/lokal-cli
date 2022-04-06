@@ -1,7 +1,7 @@
 import simpleGit, { SimpleGit } from "simple-git";
 import fs from "fs";
 
-export class Resource {
+export class Repository {
   private git: SimpleGit;
 
   constructor(private repoPath: string, private localPath: string) {

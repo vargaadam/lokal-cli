@@ -1,6 +1,6 @@
 import mockFs from "mock-fs";
 
-import { Resource } from "../resource";
+import { Repository } from "../repository";
 
 const mockClone = jest.fn().mockResolvedValue({});
 
@@ -14,7 +14,7 @@ describe("Resource tests", () => {
       const repoPath = "git@github.com:vargaadam/ticketing-system.git";
       const localPath = "test";
 
-      const resource = new Resource(repoPath, localPath);
+      const resource = new Repository(repoPath, localPath);
       await resource.clone();
 
       expect(mockClone).toHaveBeenCalledWith(repoPath, localPath);
@@ -29,7 +29,7 @@ describe("Resource tests", () => {
 
       const repoPath = "git@github.com:vargaadam/ticketing-system.git";
 
-      const resource = new Resource(repoPath, filePath);
+      const resource = new Repository(repoPath, filePath);
       await resource.clone();
 
       expect(mockClone).not.toHaveBeenCalled();
