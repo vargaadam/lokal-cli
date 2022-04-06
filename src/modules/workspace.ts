@@ -15,16 +15,13 @@ export interface WorkspaceOptions {
   apps: WorkspaceAppOptions[];
 }
 
-const WORKING_DIR_NAME = ".lokal";
-
 export class Workspace {
-  private workingDir: string;
-
   constructor(
     private workspaceOptions: WorkspaceOptions,
-    private appsOptions: AppOptions[]
+    private appsOptions: AppOptions[],
+    private workingDir: string
   ) {
-    this.workingDir = path.join(process.cwd(), WORKING_DIR_NAME);
+    this.workingDir = path.join(process.cwd(), workingDir);
   }
 
   async initApps() {
@@ -60,7 +57,7 @@ export class Workspace {
         );
         const appName = workspaceAppOptions.alias || appOptions.name;
 
-        skaffold.init(
+        skaffold.initApp(
           appName,
           this.workspaceOptions,
           appOptions,
@@ -86,11 +83,21 @@ export class Workspace {
       return act;
     }, {} as { [kes: string]: AppOptions });
 
-    const workspaceAppsOptions = Object.keys(appsOptionsObject)
-      .filter((appName) =>
-        this.workspaceOptions.apps.find((app) => app.name === appName)
-      )
-      .map((workspaceApp) => appsOptionsObject[workspaceApp]);
+    const workspaceAppsOptions: AppOptions[] = [];
+
+    this.workspaceOptions.apps.forEach((workspaceApp) => {
+      const foundApp = Object.keys(appsOptionsObject).find((appName) => {
+        return workspaceApp.name === appName;
+      });
+
+      if (!foundApp) {
+        throw new Error(
+          `No application defined with the specified application name: ${workspaceApp.name}`
+        );
+      }
+
+      workspaceAppsOptions.push(appsOptionsObject[foundApp]);
+    });
 
     return workspaceAppsOptions;
   }

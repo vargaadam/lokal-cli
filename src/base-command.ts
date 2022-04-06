@@ -15,13 +15,18 @@ const CONFIG_FILE_NAME = "lokal.yaml";
 export default abstract class BaseCommand extends Command {
   protected selectedWorkspace!: string;
   protected lokalConfig!: LokalConfig;
+  protected workingDir!: string;
 
   static flags = {
     workspace: Flags.string({ char: "w", required: true }),
   };
 
+  static args = [{ name: "workingDir", required: true }];
+
   async init() {
-    const { flags } = await this.parse(BaseCommand);
+    const { flags, args } = await this.parse(BaseCommand);
+
+    this.workingDir = args.workingDir;
 
     const configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
     this.lokalConfig = new Yaml().load(configFilePath);

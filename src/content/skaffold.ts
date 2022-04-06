@@ -53,7 +53,7 @@ export class Skaffold extends Yaml {
     };
   }
 
-  init(
+  initApp(
     appName: string,
     workspaceOptions: WorkspaceOptions,
     appOptions: AppOptions,
