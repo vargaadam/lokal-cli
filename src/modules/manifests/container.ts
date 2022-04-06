@@ -24,8 +24,10 @@ export class ManifestContainer {
       ],
     });
 
+    const serviceName = `${this.workspaceName}-${options.appName}`;
+
     deployment.exposeViaService({
-      name: options.appName,
+      name: serviceName,
       port: options.port,
     });
   }
