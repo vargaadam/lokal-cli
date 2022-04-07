@@ -14,15 +14,13 @@ export default class Init extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(Init);
+    const { apps: appsOptions } = this.lokalConfig;
 
     await Promise.all(
       this.selectedWorkspacesOptions.map(async (workspaceOptions) => {
-        const workspaceAppsOptions =
-          this.getWorkspaceAppsOptions(workspaceOptions);
-
         const workspace = new Workspace(
           workspaceOptions,
-          workspaceAppsOptions,
+          appsOptions,
           this.selectedWorkingDir
         );
 

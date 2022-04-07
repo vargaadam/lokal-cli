@@ -1,5 +1,6 @@
 import { AppOptions } from "../modules/app";
-import { WorkspaceAppOptions, WorkspaceOptions } from "../modules/workspace";
+import { WorkspaceAppOptions } from "../modules/workspace";
+import { getAppName } from "../utils";
 import { Yaml } from "./base/yaml";
 
 interface BuildSyncOptions {
@@ -23,14 +24,12 @@ export interface PortForwardOptions {
 }
 
 export interface HelmReleaseOptions {
-  name: string;
-  namespace: string;
   repo: string;
   remoteChart: string;
 }
 
 export class Skaffold extends Yaml {
-  constructor(manifestsPaths: string[]) {
+  constructor() {
     super();
 
     this.content = {
@@ -38,7 +37,7 @@ export class Skaffold extends Yaml {
       kind: "Config",
       deploy: {
         kubectl: {
-          manifests: manifestsPaths,
+          manifests: [],
         },
         helm: {
           releases: [],
@@ -55,20 +54,16 @@ export class Skaffold extends Yaml {
   }
 
   initApp(
-    appName: string,
-    workspaceOptions: WorkspaceOptions,
-    appOptions: AppOptions,
-    workspaceAppOptions: WorkspaceAppOptions
+    namespace: string,
+    workspaceAppOptions: WorkspaceAppOptions,
+    appOptions: AppOptions
   ) {
     if (appOptions.helm) {
-      this.addHelmRelease({
-        ...appOptions.helm,
-        namespace: workspaceOptions.namespace,
-      });
-    }
-
-    if (appOptions.build) {
-      this.addArtifact(appOptions.build);
+      this.addHelmRelease(
+        getAppName(workspaceAppOptions),
+        namespace,
+        appOptions.helm
+      );
     }
 
     if (
@@ -77,28 +72,38 @@ export class Skaffold extends Yaml {
       workspaceAppOptions.portForward
     ) {
       this.addPortForward({
-        resourceName: appName,
+        resourceName: getAppName(workspaceAppOptions),
         port: appOptions.manifests.deployment.port,
         localPort: workspaceAppOptions.portForward,
-        namespace: workspaceOptions.namespace,
+        namespace,
       });
     }
   }
 
-  private addArtifact(buildOptions: BuildOptions) {
+  addManifestsPath(manifestPath: string) {
+    this.content.deploy.kubectl.manifests.push(manifestPath);
+  }
+
+  addArtifact(buildOptions: BuildOptions) {
     this.content.build.artifacts.push(buildOptions);
   }
 
-  private addPortForward(portForwardOptions: PortForwardOptions) {
+  addPortForward(portForwardOptions: PortForwardOptions) {
     this.content.portForward.push({
       ...portForwardOptions,
       resourceType: portForwardOptions.resourceType || "Service",
     });
   }
 
-  private addHelmRelease(helmReleaseOptions: HelmReleaseOptions) {
+  addHelmRelease(
+    releaseName: string,
+    namespace: string,
+    helmReleaseOptions: HelmReleaseOptions
+  ) {
     this.content.deploy.helm.releases.push({
       ...helmReleaseOptions,
+      name: releaseName,
+      namespace,
       createNamespace: true,
     });
   }

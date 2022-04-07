@@ -1,6 +1,5 @@
 import { ManifestContainer } from "./manifests/container";
 import { App, AppOptions } from "./app";
-import { Skaffold } from "../content/skaffold";
 
 export interface WorkspaceAppOptions {
   name: string;
@@ -21,69 +20,61 @@ export class Workspace {
     private workingDir: string
   ) {}
 
-  async initApps(pull: boolean) {
-    await Promise.all(
-      this.appsOptions.map((appOptions) => {
-        const workspaceAppOptions = this.getAppWorkspaceOptions(
-          appOptions.name
-        );
+  async initApps(isPull: boolean) {
+    const optionsMap = this.getOptionsMap();
 
-        return new App(appOptions, workspaceAppOptions).initRepository(
-          this.workingDir,
-          pull
-        );
-      })
-    );
+    optionsMap.forEach(async (appOptions, workspaceAppOptions) => {
+      const app = new App(appOptions, workspaceAppOptions);
+
+      await app.initRepository(this.workingDir, isPull);
+    });
   }
 
-  async generateManifests() {
-    const manifestFileExtension = ".k8s.yaml";
-    const manifestPath = `${this.workingDir}/${this.workspaceOptions.name}${manifestFileExtension}`;
+  async generateAppsManifests() {
+    const MANIFEST_FILE_EXTENSION_NAME = ".k8s.yaml";
+
     const manifestContainer = new ManifestContainer(
       this.workspaceOptions.name,
       this.workspaceOptions.namespace,
-      { outdir: this.workingDir, outputFileExtension: manifestFileExtension }
-    );
-    const skaffold = new Skaffold([manifestPath]);
-
-    await Promise.all(
-      this.appsOptions.map(async (appOptions) => {
-        const workspaceAppOptions = this.getAppWorkspaceOptions(
-          appOptions.name
-        );
-        const appName = workspaceAppOptions.alias || appOptions.name;
-
-        skaffold.initApp(
-          appName,
-          this.workspaceOptions,
-          appOptions,
-          workspaceAppOptions
-        );
-
-        if (appOptions.manifests) {
-          await new App(appOptions, workspaceAppOptions).initManifests(
-            appName,
-            manifestContainer
-          );
-        }
-      })
+      {
+        outdir: this.workingDir,
+        outputFileExtension: MANIFEST_FILE_EXTENSION_NAME,
+      }
     );
 
-    manifestContainer.app.synth();
-    skaffold.persist(`${this.workingDir}/skaffold.yaml`);
+    const optionsMap = this.getOptionsMap();
+
+    optionsMap.forEach(async (appOptions, workspaceAppOptions) => {
+      const app = new App(appOptions, workspaceAppOptions);
+
+      await app.initManifests(manifestContainer);
+    });
+
+    return manifestContainer;
   }
 
-  private getAppWorkspaceOptions(appName: string) {
-    const foundWorkspaceAppOptions = this.workspaceOptions.apps.find(
-      (workspaceAppOptions) => appName === workspaceAppOptions.name
-    );
+  private getOptionsMap() {
+    const appsOptionsObject = this.appsOptions.reduce((act, current) => {
+      act[current.name] = current;
+      return act;
+    }, {} as { [kes: string]: AppOptions });
 
-    if (!foundWorkspaceAppOptions) {
-      throw new Error(
-        `No application defined with the specified application name: ${appName}`
-      );
-    }
+    const appOptionsMap = new Map<WorkspaceAppOptions, AppOptions>();
 
-    return foundWorkspaceAppOptions;
+    this.workspaceOptions.apps.forEach((workspaceApp) => {
+      const foundApp = Object.keys(appsOptionsObject).find((appName) => {
+        return workspaceApp.name === appName;
+      });
+
+      if (!foundApp) {
+        throw new Error(
+          `No application defined with the specified application name: ${workspaceApp.name}`
+        );
+      }
+
+      appOptionsMap.set(workspaceApp, appsOptionsObject[foundApp]);
+    });
+
+    return appOptionsMap;
   }
 }
