@@ -13,9 +13,10 @@ interface LokalConfig {
 const CONFIG_FILE_NAME = "lokal.yaml";
 
 export default abstract class BaseCommand extends Command {
-  protected selectedWorkspace!: string;
   protected lokalConfig!: LokalConfig;
-  protected workingDir!: string;
+  protected selectedWorkingDir!: string;
+
+  static strict = false;
 
   static flags = {
     workspace: Flags.string({ char: "w", required: true }),
@@ -26,11 +27,9 @@ export default abstract class BaseCommand extends Command {
   async init() {
     const { flags, args } = await this.parse(BaseCommand);
 
-    this.workingDir = args.workingDir;
+    this.selectedWorkingDir = path.join(process.cwd(), args.workingDir);
 
-    const configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
+    const configFilePath = path.join(this.selectedWorkingDir, CONFIG_FILE_NAME);
     this.lokalConfig = new Yaml().load(configFilePath);
-
-    this.selectedWorkspace = flags.workspace;
   }
 }

@@ -1,5 +1,6 @@
+import fs from "fs";
 import path from "path";
-import { Repository as GitRepository } from "../git/repository";
+import simpleGit, { CheckRepoActions, SimpleGit } from "simple-git";
 
 export interface RepositoryOptions {
   name: string;
@@ -8,20 +9,31 @@ export interface RepositoryOptions {
 }
 
 export class Repository {
-  private gitRepository: GitRepository;
+  private git: SimpleGit;
+  private repoDir: string;
 
-  constructor(repositoryOptions: RepositoryOptions, workingDir?: string) {
-    const localPath = workingDir
-      ? path.join(workingDir, repositoryOptions.localPath)
-      : repositoryOptions.localPath;
+  constructor(
+    private repositoryOptions: RepositoryOptions,
+    workingDir: string
+  ) {
+    this.repoDir = path.join(workingDir, this.repositoryOptions.localPath);
+    if (!fs.existsSync(this.repoDir)) {
+      fs.mkdirSync(this.repoDir);
+    }
 
-    this.gitRepository = new GitRepository(
-      repositoryOptions.repoPath,
-      localPath
-    );
+    this.git = simpleGit(this.repoDir);
   }
 
-  init() {
-    return this.gitRepository.clone();
+  async clone() {
+    const isGitRepo = await this.git.checkIsRepo(CheckRepoActions.IS_REPO_ROOT);
+    if (isGitRepo) {
+      return;
+    }
+
+    await this.git.clone(this.repositoryOptions.repoPath, this.repoDir);
+  }
+
+  async pull() {
+    await this.git.pull();
   }
 }

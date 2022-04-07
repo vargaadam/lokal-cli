@@ -18,12 +18,18 @@ export class App {
     private workspaceAppOptions: WorkspaceAppOptions
   ) {}
 
-  async initRepository(workingDir: string) {
+  async initRepository(workingDir: string, pull: boolean) {
     if (!this.appOptions.repository) {
       return;
     }
 
-    await new Repository(this.appOptions.repository, workingDir).init();
+    const repository = new Repository(this.appOptions.repository, workingDir);
+
+    await repository.clone();
+
+    if (pull) {
+      await repository.pull();
+    }
   }
 
   async initManifests(appName: string, manifestContainer: ManifestContainer) {

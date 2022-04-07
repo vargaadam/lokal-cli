@@ -20,11 +20,9 @@ export class Workspace {
     private workspaceOptions: WorkspaceOptions,
     private appsOptions: AppOptions[],
     private workingDir: string
-  ) {
-    this.workingDir = path.join(process.cwd(), workingDir);
-  }
+  ) {}
 
-  async initApps() {
+  async initApps(fetch: boolean) {
     const appsOptions = this.getWorkspaceAppsOptions();
 
     await Promise.all(
@@ -34,7 +32,8 @@ export class Workspace {
         );
 
         return new App(appOptions, workspaceAppOptions).initRepository(
-          this.workingDir
+          this.workingDir,
+          fetch
         );
       })
     );
@@ -42,8 +41,8 @@ export class Workspace {
 
   async generateManifests() {
     const appsOptions = this.getWorkspaceAppsOptions();
-    const manifestFileExtension = ".k8s.yaml";
-    const manifestPath = `${this.workingDir}/${this.workspaceOptions.name}${manifestFileExtension}`;
+    const manifestFileExtension = "k8s.yaml";
+    const manifestPath = `${this.workingDir}/${this.workspaceOptions.name}.${manifestFileExtension}`;
     const manifestContainer = new ManifestContainer(
       this.workspaceOptions.name,
       { outdir: this.workingDir, outputFileExtension: manifestFileExtension }
