@@ -37,14 +37,13 @@ export class App {
       return;
     }
 
-    const deployment = this.appOptions.manifests.deployment;
+    const deploymentOptions = this.appOptions.manifests.deployment;
 
-    if (deployment && deployment.enabled) {
+    if (deploymentOptions && deploymentOptions.enabled) {
       manifestContainer.createDeployment({
         appName,
         image: this.appOptions.build.image,
-        port: deployment.port,
-        portForward: this.workspaceAppOptions.portForward,
+        port: deploymentOptions.port,
       });
     }
   }

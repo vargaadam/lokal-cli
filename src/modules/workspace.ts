@@ -1,4 +1,3 @@
-import path from "path";
 import { ManifestContainer } from "./manifests/container";
 import { App, AppOptions } from "./app";
 import { Skaffold } from "../content/skaffold";
@@ -41,10 +40,11 @@ export class Workspace {
 
   async generateManifests() {
     const appsOptions = this.getWorkspaceAppsOptions();
-    const manifestFileExtension = "k8s.yaml";
-    const manifestPath = `${this.workingDir}/${this.workspaceOptions.name}.${manifestFileExtension}`;
+    const manifestFileExtension = ".k8s.yaml";
+    const manifestPath = `${this.workingDir}/${this.workspaceOptions.name}${manifestFileExtension}`;
     const manifestContainer = new ManifestContainer(
       this.workspaceOptions.name,
+      this.workspaceOptions.namespace,
       { outdir: this.workingDir, outputFileExtension: manifestFileExtension }
     );
     const skaffold = new Skaffold([manifestPath]);
@@ -72,7 +72,7 @@ export class Workspace {
       })
     );
 
-    manifestContainer.synth();
+    manifestContainer.app.synth();
     skaffold.persist(`${this.workingDir}/skaffold.yaml`);
   }
 

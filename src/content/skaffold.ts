@@ -24,6 +24,7 @@ export interface PortForwardOptions {
 
 export interface HelmReleaseOptions {
   name: string;
+  namespace: string;
   repo: string;
   remoteChart: string;
 }
@@ -60,7 +61,10 @@ export class Skaffold extends Yaml {
     workspaceAppOptions: WorkspaceAppOptions
   ) {
     if (appOptions.helm) {
-      this.addHelmRelease(appOptions.helm);
+      this.addHelmRelease({
+        ...appOptions.helm,
+        namespace: workspaceOptions.namespace,
+      });
     }
 
     if (appOptions.build) {
@@ -87,12 +91,15 @@ export class Skaffold extends Yaml {
 
   private addPortForward(portForwardOptions: PortForwardOptions) {
     this.content.portForward.push({
-      resourceType: portForwardOptions.resourceType || "Service",
       ...portForwardOptions,
+      resourceType: portForwardOptions.resourceType || "Service",
     });
   }
 
   private addHelmRelease(helmReleaseOptions: HelmReleaseOptions) {
-    this.content.deploy.helm.releases.push(helmReleaseOptions);
+    this.content.deploy.helm.releases.push({
+      ...helmReleaseOptions,
+      createNamespace: true,
+    });
   }
 }
