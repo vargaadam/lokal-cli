@@ -21,7 +21,7 @@ export class Workspace {
     private workingDir: string
   ) {}
 
-  async initApps(fetch: boolean) {
+  async initApps(pull: boolean) {
     await Promise.all(
       this.appsOptions.map((appOptions) => {
         const workspaceAppOptions = this.getAppWorkspaceOptions(
@@ -30,7 +30,7 @@ export class Workspace {
 
         return new App(appOptions, workspaceAppOptions).initRepository(
           this.workingDir,
-          fetch
+          pull
         );
       })
     );

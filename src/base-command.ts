@@ -15,6 +15,7 @@ const CONFIG_FILE_NAME = "lokal.yaml";
 export default abstract class BaseCommand extends Command {
   protected lokalConfig!: LokalConfig;
   protected selectedWorkingDir!: string;
+  protected selectedWorkspacesOptions!: WorkspaceOptions[];
 
   static strict = false;
 
@@ -25,12 +26,16 @@ export default abstract class BaseCommand extends Command {
   static args = [{ name: "workingDir", required: true }];
 
   async init() {
-    const { args } = await this.parse(BaseCommand);
+    const { args, flags } = await this.parse(BaseCommand);
 
     this.selectedWorkingDir = path.join(process.cwd(), args.workingDir);
 
     const configFilePath = path.join(this.selectedWorkingDir, CONFIG_FILE_NAME);
     this.lokalConfig = new Yaml().load(configFilePath);
+
+    this.selectedWorkspacesOptions = this.getSelectedWorkspacesOptions(
+      flags.workspaces
+    );
   }
 
   protected getWorkspaceAppsOptions(workspace: WorkspaceOptions) {
@@ -58,5 +63,13 @@ export default abstract class BaseCommand extends Command {
     });
 
     return workspaceAppsOptions;
+  }
+
+  private getSelectedWorkspacesOptions(workspaces: string[]) {
+    const { workspaces: workspacesOptions } = this.lokalConfig;
+
+    return workspacesOptions.filter((workspaceOptions) =>
+      workspaces.find((workspace) => workspace === workspaceOptions.name)
+    );
   }
 }
