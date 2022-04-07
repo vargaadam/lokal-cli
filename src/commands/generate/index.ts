@@ -1,9 +1,11 @@
-import { OutputFlags } from "@oclif/core/lib/interfaces";
 import BaseCommand from "../../base-command";
+import { AppOptions } from "../../modules/app";
 import { Workspace } from "../../modules/workspace";
 
 export default class Generate extends BaseCommand {
-  static examples = ["$ lkl generate DIRECTORY --workspace WORKSPACE"];
+  static examples = [
+    "$ lkl generate DIRECTORY --workspace WORKSPACE1 WORKSPACE2",
+  ];
 
   static args = [...BaseCommand.args];
 
@@ -12,22 +14,31 @@ export default class Generate extends BaseCommand {
   };
 
   async run(): Promise<void> {
-    const { flags, args } = await this.parse(Generate);
+    const { flags } = await this.parse(Generate);
 
-    const { workspaces, apps } = this.lokalConfig;
+    const { workspaces: workspacesOptions, apps: appsOptions } =
+      this.lokalConfig;
 
-    const filteredWorkspace = flags.workspace
-      ? workspaces.filter((workspace) => workspace.name === flags.workspace)
-      : workspaces;
+    const selectedWorkspacesOptions = workspacesOptions.filter(
+      (workspaceOptions) =>
+        flags.workspaces.find(
+          (workspace) => workspace === workspaceOptions.name
+        )
+    );
 
     await Promise.all(
-      filteredWorkspace.map((workspace) =>
-        new Workspace(
-          workspace,
-          apps,
+      selectedWorkspacesOptions.map(async (workspaceOptions) => {
+        const workspaceAppsOptions =
+          this.getWorkspaceAppsOptions(workspaceOptions);
+
+        const workspace = new Workspace(
+          workspaceOptions,
+          workspaceAppsOptions,
           this.selectedWorkingDir
-        ).generateManifests()
-      )
+        );
+
+        await workspace.generateManifests();
+      })
     );
   }
 }

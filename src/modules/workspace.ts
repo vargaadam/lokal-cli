@@ -22,10 +22,8 @@ export class Workspace {
   ) {}
 
   async initApps(fetch: boolean) {
-    const appsOptions = this.getWorkspaceAppsOptions();
-
     await Promise.all(
-      appsOptions.map((appOptions) => {
+      this.appsOptions.map((appOptions) => {
         const workspaceAppOptions = this.getAppWorkspaceOptions(
           appOptions.name
         );
@@ -39,7 +37,6 @@ export class Workspace {
   }
 
   async generateManifests() {
-    const appsOptions = this.getWorkspaceAppsOptions();
     const manifestFileExtension = ".k8s.yaml";
     const manifestPath = `${this.workingDir}/${this.workspaceOptions.name}${manifestFileExtension}`;
     const manifestContainer = new ManifestContainer(
@@ -50,7 +47,7 @@ export class Workspace {
     const skaffold = new Skaffold([manifestPath]);
 
     await Promise.all(
-      appsOptions.map(async (appOptions) => {
+      this.appsOptions.map(async (appOptions) => {
         const workspaceAppOptions = this.getAppWorkspaceOptions(
           appOptions.name
         );
@@ -76,34 +73,17 @@ export class Workspace {
     skaffold.persist(`${this.workingDir}/skaffold.yaml`);
   }
 
-  private getWorkspaceAppsOptions() {
-    const appsOptionsObject = this.appsOptions.reduce((act, current) => {
-      act[current.name] = current;
-      return act;
-    }, {} as { [kes: string]: AppOptions });
-
-    const workspaceAppsOptions: AppOptions[] = [];
-
-    this.workspaceOptions.apps.forEach((workspaceApp) => {
-      const foundApp = Object.keys(appsOptionsObject).find((appName) => {
-        return workspaceApp.name === appName;
-      });
-
-      if (!foundApp) {
-        throw new Error(
-          `No application defined with the specified application name: ${workspaceApp.name}`
-        );
-      }
-
-      workspaceAppsOptions.push(appsOptionsObject[foundApp]);
-    });
-
-    return workspaceAppsOptions;
-  }
-
   private getAppWorkspaceOptions(appName: string) {
-    return this.workspaceOptions.apps.find(
+    const foundWorkspaceAppOptions = this.workspaceOptions.apps.find(
       (workspaceAppOptions) => appName === workspaceAppOptions.name
-    ) as WorkspaceAppOptions;
+    );
+
+    if (!foundWorkspaceAppOptions) {
+      throw new Error(
+        `No application defined with the specified application name: ${appName}`
+      );
+    }
+
+    return foundWorkspaceAppOptions;
   }
 }

@@ -14,17 +14,23 @@ export default class Init extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(Init);
-    const { workspaces, apps } = this.lokalConfig;
+    const { workspaces: workspacesOptions, apps: appsOptions } =
+      this.lokalConfig;
 
-    const filteredWorkspace = flags.workspace
-      ? workspaces.filter((workspace) => workspace.name === flags.workspace)
-      : workspaces;
+    const filteredWorkspaceOptions = workspacesOptions.filter(
+      (workspaceOptions) =>
+        flags.workspaces.find(
+          (workspace) => workspace === workspaceOptions.name
+        )
+    );
 
     await Promise.all(
-      filteredWorkspace.map((workspace) => {
-        return new Workspace(workspace, apps, this.selectedWorkingDir).initApps(
-          flags.pull
-        );
+      filteredWorkspaceOptions.map((workspaceOptions) => {
+        return new Workspace(
+          workspaceOptions,
+          appsOptions,
+          this.selectedWorkingDir
+        ).initApps(flags.pull);
       })
     );
   }
