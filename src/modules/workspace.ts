@@ -20,7 +20,6 @@ export class Workspace {
     private workingDir: string
   ) {}
 
-  // TODO first init doesnt work properly
   async initApps(isPull: boolean) {
     const optionsMap = this.getOptionsMap();
 

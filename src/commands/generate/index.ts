@@ -17,6 +17,8 @@ export default class Generate extends BaseCommand {
   async run(): Promise<void> {
     const { apps: appsOptions } = this.lokalConfig;
 
+    const manifestsDir = path.join(this.workingDir, ".lokal");
+
     const skaffold = new Skaffold();
     const inUsedApps = new Set<string>();
 
@@ -25,7 +27,7 @@ export default class Generate extends BaseCommand {
         const workspace = new Workspace(
           workspaceOptions,
           appsOptions,
-          this.workingDir
+          manifestsDir
         );
 
         workspaceOptions.apps.forEach((workspaceAppOptions) => {
@@ -47,7 +49,7 @@ export default class Generate extends BaseCommand {
         const manifestContainer = await workspace.initAppsManifests();
         manifestContainer.app.synth();
 
-        const manifestPath = `${this.workingDir}/${workspaceOptions.name}${manifestContainer.app.outputFileExtension}`;
+        const manifestPath = `${manifestsDir}/${workspaceOptions.name}${manifestContainer.app.outputFileExtension}`;
         skaffold.addManifestsPath(manifestPath);
       })
     );
@@ -58,14 +60,18 @@ export default class Generate extends BaseCommand {
       );
 
       if (foundAppOption && foundAppOption.build) {
+        const context = foundAppOption.repository?.localPath
+          ? path.join(this.workingDir, foundAppOption.repository.localPath)
+          : foundAppOption.build.context;
+
         skaffold.addArtifact({
-          context: foundAppOption.repository?.localPath,
           ...foundAppOption.build,
+          context,
         });
       }
     });
 
-    const skaffoldPath = path.join(this.workingDir, "skaffold.yaml");
+    const skaffoldPath = path.join(manifestsDir, "skaffold.yaml");
     skaffold.persist(skaffoldPath);
   }
 }
