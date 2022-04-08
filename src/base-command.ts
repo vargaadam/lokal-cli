@@ -10,28 +10,45 @@ export interface LokalConfig {
   apps: AppOptions[];
 }
 
+const SKAFFOLD_FILE_NAME = "skaffold.yaml";
 const CONFIG_FILE_NAME = "lokal.yaml";
+const DIST_FOLDER_NAME = ".lokal";
 
-export default abstract class BaseCommand extends Command {
+export abstract class BaseCommand extends Command {
   protected lokalConfig!: LokalConfig;
-  protected workingDir!: string;
+  protected workingDirPath!: string;
+  protected skaffoldFilePath!: string;
+  protected distFilePath!: string;
+
+  static strict = false;
+
+  static args = [{ name: "workingDir", required: true }];
+
+  async init() {
+    const { args } = await this.parse(BaseCommand);
+
+    this.workingDirPath = path.join(process.cwd(), args.workingDir);
+    this.distFilePath = path.join(this.workingDirPath, DIST_FOLDER_NAME);
+    this.skaffoldFilePath = path.join(this.distFilePath, SKAFFOLD_FILE_NAME);
+
+    const configFilePath = path.join(this.workingDirPath, CONFIG_FILE_NAME);
+    this.lokalConfig = new Yaml().load(configFilePath);
+  }
+}
+
+export abstract class WorkspaceCommand extends BaseCommand {
   protected selectedWorkspacesOptions!: WorkspaceOptions[];
 
   static strict = false;
 
   static flags = {
-    workspaces: Flags.string({ char: "w", required: true, multiple: true }),
+    ...BaseCommand.flags,
+    workspaces: Flags.string({ char: "w", multiple: true, required: true }),
   };
 
-  static args = [{ name: "workingDir", required: true }];
-
   async init() {
-    const { args, flags } = await this.parse(BaseCommand);
-
-    this.workingDir = path.join(process.cwd(), args.workingDir);
-
-    const configFilePath = path.join(this.workingDir, CONFIG_FILE_NAME);
-    this.lokalConfig = new Yaml().load(configFilePath);
+    await super.init();
+    const { flags } = await this.parse(WorkspaceCommand);
 
     this.selectedWorkspacesOptions = this.getSelectedWorkspacesOptions(
       flags.workspaces

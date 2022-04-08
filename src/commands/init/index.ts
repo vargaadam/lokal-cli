@@ -1,18 +1,18 @@
 import { Workspace } from "../../modules/workspace";
-import BaseCommand from "../../base-command";
+import { WorkspaceCommand } from "../../base-command";
 import { Flags } from "@oclif/core";
 
-export default class Init extends BaseCommand {
+export default class Init extends WorkspaceCommand {
   static examples = ["$ lkl init DIRECTORY --workspace WORKSPACE"];
 
-  static args = [...BaseCommand.args];
+  static args = [...WorkspaceCommand.args];
 
   static flags = {
-    ...BaseCommand.flags,
+    ...WorkspaceCommand.flags,
     pull: Flags.boolean({ default: false }),
   };
 
-  async run(): Promise<void> {
+  async run() {
     const { flags } = await this.parse(Init);
     const { apps: appsOptions } = this.lokalConfig;
 
@@ -20,7 +20,7 @@ export default class Init extends BaseCommand {
       const workspace = new Workspace(
         workspaceOptions,
         appsOptions,
-        this.workingDir
+        this.workingDirPath
       );
 
       await workspace.initApps(flags.pull);

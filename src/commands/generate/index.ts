@@ -1,24 +1,22 @@
 import path from "path";
-import BaseCommand from "../../base-command";
+import { WorkspaceCommand } from "../../base-command";
 import { Skaffold } from "../../content/skaffold";
 import { Workspace } from "../../modules/workspace";
 import { getAppName } from "../../utils";
 
-export default class Generate extends BaseCommand {
+export default class Generate extends WorkspaceCommand {
   static examples = [
     "$ lkl generate DIRECTORY --workspace WORKSPACE1 WORKSPACE2",
   ];
 
-  static args = [...BaseCommand.args];
+  static args = [...WorkspaceCommand.args];
 
   static flags = {
-    ...BaseCommand.flags,
+    ...WorkspaceCommand.flags,
   };
 
-  async run(): Promise<void> {
+  async run() {
     const { apps: appsOptions } = this.lokalConfig;
-
-    const manifestsDir = path.join(this.workingDir, ".lokal");
 
     const skaffold = new Skaffold();
     const inUsedApps = new Set<string>();
@@ -28,7 +26,7 @@ export default class Generate extends BaseCommand {
         const workspace = new Workspace(
           workspaceOptions,
           appsOptions,
-          manifestsDir
+          this.distFilePath
         );
 
         workspaceOptions.apps.forEach((workspaceAppOptions) => {
@@ -41,7 +39,7 @@ export default class Generate extends BaseCommand {
           if (foundAppOption?.helm) {
             const valuesFiles = foundAppOption.helm.valuesFiles
               ? foundAppOption.helm.valuesFiles.map((valueFilePath) =>
-                  path.join(this.workingDir, valueFilePath)
+                  path.join(this.workingDirPath, valueFilePath)
                 )
               : [];
 
@@ -71,7 +69,7 @@ export default class Generate extends BaseCommand {
         const manifestContainer = await workspace.initAppsManifests();
         manifestContainer.app.synth();
 
-        const manifestPath = `${manifestsDir}/${workspaceOptions.name}${manifestContainer.app.outputFileExtension}`;
+        const manifestPath = `${this.distFilePath}/${workspaceOptions.name}${manifestContainer.app.outputFileExtension}`;
         skaffold.addManifestsPath(manifestPath);
       })
     );
@@ -83,7 +81,7 @@ export default class Generate extends BaseCommand {
 
       if (foundAppOption && foundAppOption.build) {
         const context = foundAppOption.repository?.localPath
-          ? path.join(this.workingDir, foundAppOption.repository.localPath)
+          ? path.join(this.workingDirPath, foundAppOption.repository.localPath)
           : foundAppOption.build.context;
 
         skaffold.addArtifact({
@@ -93,7 +91,6 @@ export default class Generate extends BaseCommand {
       }
     });
 
-    const skaffoldPath = path.join(manifestsDir, "skaffold.yaml");
-    skaffold.persist(skaffoldPath);
+    skaffold.persist(this.skaffoldFilePath);
   }
 }
