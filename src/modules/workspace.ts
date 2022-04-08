@@ -16,28 +16,27 @@ export interface WorkspaceOptions {
 export class Workspace {
   constructor(
     private workspaceOptions: WorkspaceOptions,
-    private appsOptions: AppOptions[],
-    private workingDir: string
+    private appsOptions: AppOptions[]
   ) {}
 
-  async initApps(isPull: boolean) {
+  async initApps(workingDirPath: string, isPull: boolean) {
     const optionsMap = this.getOptionsMap();
 
     for (const [workspaceAppOptions, appOptions] of optionsMap.entries()) {
       const app = new App(appOptions, workspaceAppOptions);
 
-      await app.initRepository(this.workingDir, isPull);
+      await app.initRepository(workingDirPath, isPull);
     }
   }
 
-  async initAppsManifests() {
+  async generateAppsManifests(resourceFilePath: string) {
     const MANIFEST_FILE_EXTENSION_NAME = ".k8s.yaml";
 
     const manifestContainer = new ManifestContainer(
       this.workspaceOptions.name,
       this.workspaceOptions.namespace,
       {
-        outdir: this.workingDir,
+        outdir: resourceFilePath,
         outputFileExtension: MANIFEST_FILE_EXTENSION_NAME,
       }
     );
@@ -49,6 +48,8 @@ export class Workspace {
 
       await app.initManifests(manifestContainer);
     }
+
+    manifestContainer.app.synth();
 
     return manifestContainer;
   }

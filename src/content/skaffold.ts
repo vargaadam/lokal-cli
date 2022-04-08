@@ -1,3 +1,5 @@
+import child_process from "child_process";
+import path from "path";
 import { Yaml } from "./base/yaml";
 
 interface BuildSyncOptions {
@@ -29,9 +31,13 @@ export interface HelmReleaseOptions {
   valuesFiles?: string[];
 }
 
+const SKAFFOLD_FILE_NAME = "skaffold.yaml";
+
 export class Skaffold extends Yaml {
-  constructor() {
-    super();
+  constructor(resourcesFilePath: string) {
+    const skaffoldFilePath = path.join(resourcesFilePath, SKAFFOLD_FILE_NAME);
+
+    super(skaffoldFilePath);
 
     this.content = {
       apiVersion: "skaffold/v2beta22",
@@ -52,6 +58,18 @@ export class Skaffold extends Yaml {
       },
       portForward: [],
     };
+  }
+
+  runDev() {
+    child_process.execSync(`skaffold dev -f ${this.filePath}`, {
+      stdio: "inherit",
+    });
+  }
+
+  runDelete() {
+    child_process.execSync(`skaffold delete -f ${this.filePath}`, {
+      stdio: "inherit",
+    });
   }
 
   addManifestsPath(manifestPath: string) {

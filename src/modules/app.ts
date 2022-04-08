@@ -18,12 +18,15 @@ export class App {
     private workspaceAppOptions: WorkspaceAppOptions
   ) {}
 
-  async initRepository(workingDir: string, isPull: boolean) {
+  async initRepository(resourcesFilePath: string, isPull: boolean) {
     if (!this.appOptions.repository) {
       return;
     }
 
-    const repository = new Repository(this.appOptions.repository, workingDir);
+    const repository = new Repository(
+      this.appOptions.repository,
+      resourcesFilePath
+    );
 
     await repository.clone();
 
@@ -40,7 +43,7 @@ export class App {
     const appName = this.workspaceAppOptions.alias || this.appOptions.name;
     const deploymentOptions = this.appOptions.manifests.deployment;
 
-    if (deploymentOptions && deploymentOptions.enabled) {
+    if (deploymentOptions) {
       manifestContainer.createDeployment({
         appName,
         image: this.appOptions.build.image,

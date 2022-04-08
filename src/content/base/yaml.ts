@@ -4,15 +4,17 @@ import YAML from "yaml";
 export class Yaml {
   content: any;
 
-  load(path: string) {
-    const content = fs.readFileSync(path, "utf8");
+  constructor(public filePath: string) {}
+
+  load() {
+    const content = fs.readFileSync(this.filePath, "utf8");
     this.content = YAML.parse(content);
 
     return this.content;
   }
 
-  persist(path: string) {
+  persist() {
     const content = YAML.stringify(this.content);
-    fs.writeFileSync(path, content);
+    fs.writeFileSync(this.filePath, content);
   }
 }

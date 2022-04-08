@@ -60,7 +60,6 @@ apps:
       repoPath: "git@github.com:vargaadam/example-service.git"
     manifests:
       deployment:
-        enabled: true
         port: 3000
     build:
       image: test/image1
@@ -78,7 +77,6 @@ apps:
       repoPath: "git@github.com:vargaadam/example-service.git"
     manifests:
       deployment:
-        enabled: true
         port: 3000
     build:
       image: test/image2

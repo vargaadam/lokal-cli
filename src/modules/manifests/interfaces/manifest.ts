@@ -1,5 +1,4 @@
 export interface ManifestDeploymentOptions {
-  enabled: boolean;
   port: number;
 }
 
