@@ -19,7 +19,6 @@
   "dependencies": {
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
-    "@oclif/plugin-plugins": "^2.0.1",
     "cdk8s": "^1.5.60",
     "cdk8s-plus-22": "^1.0.0-beta.170",
     "constructs": "^3.3.257",
@@ -50,19 +49,26 @@
     "dirname": "lkl",
     "commands": "./dist/commands",
     "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-plugins"
+      "@oclif/plugin-help"
     ],
     "topicSeparator": " ",
     "topics": {
       "init": {
-        "description": "Init apps"
+        "description": "Clone the repository if it specified"
+      },
+      "generate": {
+        "description": "Generate the required manifests"
+      },
+      "dev": {
+        "description": "Start local dev"
+      },
+      "delete": {
+        "description": "Delete the resources"
       }
     }
   },
   "scripts": {
-    "gen": "cdk8s import k8s --language typescript --output ./src/imports",
-    "build": "shx rm -rf dist imports && npm run gen && tsc -b",
+    "build": "shx rm -rf dist imports && tsc -b",
     "postpack": "shx rm -f oclif.manifest.json",
     "prepack": "npm run build && oclif manifest && oclif readme",
     "test": "jest --watchAll --no-cache",
