@@ -2,8 +2,7 @@ import path from "path";
 import { Command, Flags } from "@oclif/core";
 import { Yaml } from "./content/base/yaml";
 import { AppOptions } from "./modules/app";
-import { WorkspaceAppOptions, WorkspaceOptions } from "./modules/workspace";
-import { string } from "@oclif/core/lib/flags";
+import { WorkspaceOptions } from "./modules/workspace";
 
 export interface LokalConfig {
   name: string;

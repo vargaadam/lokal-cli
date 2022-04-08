@@ -26,6 +26,7 @@ export class Repository {
 
   async clone() {
     const isGitRepo = await this.git.checkIsRepo(CheckRepoActions.IS_REPO_ROOT);
+
     if (isGitRepo) {
       return;
     }

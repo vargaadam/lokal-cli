@@ -20,17 +20,18 @@ export class Workspace {
     private workingDir: string
   ) {}
 
+  // TODO first init doesnt work properly
   async initApps(isPull: boolean) {
     const optionsMap = this.getOptionsMap();
 
-    optionsMap.forEach(async (appOptions, workspaceAppOptions) => {
+    for (const [workspaceAppOptions, appOptions] of optionsMap.entries()) {
       const app = new App(appOptions, workspaceAppOptions);
 
       await app.initRepository(this.workingDir, isPull);
-    });
+    }
   }
 
-  async generateAppsManifests() {
+  async initAppsManifests() {
     const MANIFEST_FILE_EXTENSION_NAME = ".k8s.yaml";
 
     const manifestContainer = new ManifestContainer(
@@ -44,11 +45,11 @@ export class Workspace {
 
     const optionsMap = this.getOptionsMap();
 
-    optionsMap.forEach(async (appOptions, workspaceAppOptions) => {
+    for (const [workspaceAppOptions, appOptions] of optionsMap.entries()) {
       const app = new App(appOptions, workspaceAppOptions);
 
       await app.initManifests(manifestContainer);
-    });
+    }
 
     return manifestContainer;
   }

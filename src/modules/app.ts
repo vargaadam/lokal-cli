@@ -48,8 +48,4 @@ export class App {
       });
     }
   }
-
-  build() {}
-
-  deploy() {}
 }

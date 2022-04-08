@@ -44,7 +44,7 @@ export default class Generate extends BaseCommand {
           }
         });
 
-        const manifestContainer = await workspace.generateAppsManifests();
+        const manifestContainer = await workspace.initAppsManifests();
         manifestContainer.app.synth();
 
         const manifestPath = `${this.selectedWorkingDir}/${workspaceOptions.name}${manifestContainer.app.outputFileExtension}`;
