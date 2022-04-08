@@ -6,7 +6,7 @@ import { getAppName } from "../../utils";
 
 export default class Generate extends WorkspaceCommand {
   static examples = [
-    "$ lkl generate DIRECTORY --workspace WORKSPACE1 WORKSPACE2",
+    "$ lkl generate DIRECTORY --workspaces WORKSPACE1 WORKSPACE2",
   ];
 
   static args = [...WorkspaceCommand.args];

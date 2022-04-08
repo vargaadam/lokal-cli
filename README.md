@@ -1,7 +1,27 @@
 loKal
 =================
 
-## Config example:
+<!-- toc -->
+* [Usage](#usage)
+* [Config](#config)
+* [Commands](#commands)
+<!-- tocstop -->
+# Usage
+<!-- usage -->
+```sh-session
+$ npm install -g lokal
+$ lkl COMMAND
+running command...
+$ lkl (--version)
+lokal/0.0.0 darwin-arm64 node-v16.14.0
+$ lkl --help [COMMAND]
+USAGE
+  $ lkl COMMAND
+...
+```
+<!-- usagestop -->
+
+# Config
 
 ```yaml
 version: lokal/v1alpha1
@@ -69,37 +89,13 @@ apps:
           - src: "src/**/*.js"
             dest: .
 ```
-
-
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-# Usage
-<!-- usage -->
-```sh-session
-$ npm install -g lokal
-$ lkl COMMAND
-running command...
-$ lkl (--version)
-lokal/0.0.0 darwin-arm64 node-v16.14.0
-$ lkl --help [COMMAND]
-USAGE
-  $ lkl COMMAND
-...
-```
-<!-- usagestop -->
 # Commands
 <!-- commands -->
-- [loKal](#lokal)
-  - [Config example:](#config-example)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
-  - [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
-  - [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
-  - [`lkl help [COMMAND]`](#lkl-help-command)
-  - [`lkl init WORKINGDIR`](#lkl-init-workingdir)
+* [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
+* [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
+* [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
+* [`lkl help [COMMAND]`](#lkl-help-command)
+* [`lkl init WORKINGDIR`](#lkl-init-workingdir)
 
 ## `lkl delete WORKINGDIR`
 

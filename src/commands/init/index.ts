@@ -3,7 +3,7 @@ import { WorkspaceCommand } from "../../base-command";
 import { Flags } from "@oclif/core";
 
 export default class Init extends WorkspaceCommand {
-  static examples = ["$ lkl init DIRECTORY --workspace WORKSPACE"];
+  static examples = ["$ lkl init DIRECTORY --workspaces WORKSPACE"];
 
   static args = [...WorkspaceCommand.args];
 
