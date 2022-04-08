@@ -25,7 +25,7 @@ export default class Generate extends BaseCommand {
         const workspace = new Workspace(
           workspaceOptions,
           appsOptions,
-          this.selectedWorkingDir
+          this.workingDir
         );
 
         workspaceOptions.apps.forEach((workspaceAppOptions) => {
@@ -47,7 +47,7 @@ export default class Generate extends BaseCommand {
         const manifestContainer = await workspace.initAppsManifests();
         manifestContainer.app.synth();
 
-        const manifestPath = `${this.selectedWorkingDir}/${workspaceOptions.name}${manifestContainer.app.outputFileExtension}`;
+        const manifestPath = `${this.workingDir}/${workspaceOptions.name}${manifestContainer.app.outputFileExtension}`;
         skaffold.addManifestsPath(manifestPath);
       })
     );
@@ -58,11 +58,14 @@ export default class Generate extends BaseCommand {
       );
 
       if (foundAppOption && foundAppOption.build) {
-        skaffold.addArtifact(foundAppOption.build);
+        skaffold.addArtifact({
+          context: foundAppOption.repository?.localPath,
+          ...foundAppOption.build,
+        });
       }
     });
 
-    const skaffoldPath = path.join(this.selectedWorkingDir, "skaffold.yaml");
+    const skaffoldPath = path.join(this.workingDir, "skaffold.yaml");
     skaffold.persist(skaffoldPath);
   }
 }

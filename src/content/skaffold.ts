@@ -10,7 +10,7 @@ interface BuildSyncOptions {
 
 export interface BuildOptions {
   image: string;
-  context: string;
+  context?: string;
   docker: { dockerfile: string };
   sync: BuildSyncOptions[];
 }
@@ -24,6 +24,9 @@ export interface PortForwardOptions {
 }
 
 export interface HelmReleaseOptions {
+  name?: string;
+  namespace?: string;
+  createNamespace?: string;
   repo: string;
   remoteChart: string;
 }
@@ -90,8 +93,8 @@ export class Skaffold extends Yaml {
 
   addPortForward(portForwardOptions: PortForwardOptions) {
     this.content.portForward.push({
+      resourceType: "Service",
       ...portForwardOptions,
-      resourceType: portForwardOptions.resourceType || "Service",
     });
   }
 
@@ -101,10 +104,10 @@ export class Skaffold extends Yaml {
     helmReleaseOptions: HelmReleaseOptions
   ) {
     this.content.deploy.helm.releases.push({
-      ...helmReleaseOptions,
       name: releaseName,
       namespace,
       createNamespace: true,
+      ...helmReleaseOptions,
     });
   }
 }

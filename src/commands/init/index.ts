@@ -20,7 +20,7 @@ export default class Init extends BaseCommand {
       const workspace = new Workspace(
         workspaceOptions,
         appsOptions,
-        this.selectedWorkingDir
+        this.workingDir
       );
 
       await workspace.initApps(flags.pull);
