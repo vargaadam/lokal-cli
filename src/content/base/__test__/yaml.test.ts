@@ -13,8 +13,8 @@ describe("Yaml tests", () => {
 
   describe("#load", () => {
     it("should parse the yaml content", () => {
-      const yaml = new Yaml();
-      const content = yaml.load(filePath);
+      const yaml = new Yaml(filePath);
+      const content = yaml.load();
 
       expect(content).toEqual([true, false, "maybe", null]);
     });
