@@ -1,6 +1,3 @@
-import { AppOptions } from "../modules/app";
-import { WorkspaceAppOptions } from "../modules/workspace";
-import { getAppName } from "../utils";
 import { Yaml } from "./base/yaml";
 
 interface BuildSyncOptions {
@@ -29,6 +26,7 @@ export interface HelmReleaseOptions {
   createNamespace?: string;
   repo: string;
   remoteChart: string;
+  valuesFiles?: string[];
 }
 
 export class Skaffold extends Yaml {
@@ -54,33 +52,6 @@ export class Skaffold extends Yaml {
       },
       portForward: [],
     };
-  }
-
-  initApp(
-    namespace: string,
-    workspaceAppOptions: WorkspaceAppOptions,
-    appOptions: AppOptions
-  ) {
-    if (appOptions.helm) {
-      this.addHelmRelease(
-        getAppName(workspaceAppOptions),
-        namespace,
-        appOptions.helm
-      );
-    }
-
-    if (
-      appOptions.manifests &&
-      appOptions.manifests.deployment &&
-      workspaceAppOptions.portForward
-    ) {
-      this.addPortForward({
-        resourceName: getAppName(workspaceAppOptions),
-        port: appOptions.manifests.deployment.port,
-        localPort: workspaceAppOptions.portForward,
-        namespace,
-      });
-    }
   }
 
   addManifestsPath(manifestPath: string) {

@@ -2,6 +2,7 @@ import path from "path";
 import BaseCommand from "../../base-command";
 import { Skaffold } from "../../content/skaffold";
 import { Workspace } from "../../modules/workspace";
+import { getAppName } from "../../utils";
 
 export default class Generate extends BaseCommand {
   static examples = [
@@ -37,12 +38,33 @@ export default class Generate extends BaseCommand {
             (appOption) => appOption.name === workspaceAppOptions.name
           );
 
-          if (foundAppOption) {
-            skaffold.initApp(
+          if (foundAppOption?.helm) {
+            const valuesFiles = foundAppOption.helm.valuesFiles
+              ? foundAppOption.helm.valuesFiles.map((valueFilePath) =>
+                  path.join(this.workingDir, valueFilePath)
+                )
+              : [];
+
+            skaffold.addHelmRelease(
+              getAppName(workspaceAppOptions),
               workspaceOptions.namespace,
-              workspaceAppOptions,
-              foundAppOption
+              {
+                ...foundAppOption.helm,
+                valuesFiles,
+              }
             );
+
+            if (
+              foundAppOption?.manifests?.deployment &&
+              workspaceAppOptions.portForward
+            ) {
+              skaffold.addPortForward({
+                resourceName: getAppName(workspaceAppOptions),
+                port: foundAppOption.manifests.deployment.port,
+                localPort: workspaceAppOptions.portForward,
+                namespace: workspaceOptions.namespace,
+              });
+            }
           }
         });
 
