@@ -13,7 +13,7 @@ $ npm install -g lokal
 $ lkl COMMAND
 running command...
 $ lkl (--version)
-lokal/0.0.0 darwin-arm64 node-v16.14.0
+lokal/0.0.1 darwin-arm64 node-v16.14.0
 $ lkl --help [COMMAND]
 USAGE
   $ lkl COMMAND
@@ -105,7 +105,7 @@ EXAMPLES
   $ lkl delete DIRECTORY
 ```
 
-_See code: [dist/commands/delete/index.ts](https://github.com/Magyar-Bankholding-Zrt/lokal/blob/v0.0.0/dist/commands/delete/index.ts)_
+_See code: [dist/commands/delete/index.ts](https://github.com/Magyar-Bankholding-Zrt/lokal/blob/v0.0.1/dist/commands/delete/index.ts)_
 
 ## `lkl dev WORKINGDIR`
 
@@ -117,7 +117,7 @@ EXAMPLES
   $ lkl dev DIRECTORY
 ```
 
-_See code: [dist/commands/dev/index.ts](https://github.com/Magyar-Bankholding-Zrt/lokal/blob/v0.0.0/dist/commands/dev/index.ts)_
+_See code: [dist/commands/dev/index.ts](https://github.com/Magyar-Bankholding-Zrt/lokal/blob/v0.0.1/dist/commands/dev/index.ts)_
 
 ## `lkl generate WORKINGDIR`
 
@@ -132,7 +132,7 @@ EXAMPLES
   $ lkl generate DIRECTORY --workspace WORKSPACE1 WORKSPACE2
 ```
 
-_See code: [dist/commands/generate/index.ts](https://github.com/Magyar-Bankholding-Zrt/lokal/blob/v0.0.0/dist/commands/generate/index.ts)_
+_See code: [dist/commands/generate/index.ts](https://github.com/Magyar-Bankholding-Zrt/lokal/blob/v0.0.1/dist/commands/generate/index.ts)_
 
 ## `lkl help [COMMAND]`
 
@@ -168,5 +168,5 @@ EXAMPLES
   $ lkl init DIRECTORY --workspace WORKSPACE
 ```
 
-_See code: [dist/commands/init/index.ts](https://github.com/Magyar-Bankholding-Zrt/lokal/blob/v0.0.0/dist/commands/init/index.ts)_
+_See code: [dist/commands/init/index.ts](https://github.com/Magyar-Bankholding-Zrt/lokal/blob/v0.0.1/dist/commands/init/index.ts)_
 <!-- commandsstop -->
