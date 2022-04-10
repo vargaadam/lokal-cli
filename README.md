@@ -2,10 +2,17 @@ loKal
 =================
 
 <!-- toc -->
+* [Requirements](#requirements)
 * [Usage](#usage)
 * [Config](#config)
 * [Commands](#commands)
 <!-- tocstop -->
+
+# Requirements
+
+- [skaffold](https://skaffold.dev/docs/install/#standalone-binary)
+
+- [git](https://git-scm.com/downloads)
 # Usage
 <!-- usage -->
 ```sh-session
