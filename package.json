@@ -20,9 +20,9 @@
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
     "cdk8s": "^1.5.61",
-    "cdk8s-plus-22": "^1.0.0-beta.181",
+    "cdk8s-plus-22": "^1.0.0-beta.183",
     "constructs": "^3.3.257",
-    "simple-git": "^3.5.0",
+    "simple-git": "^3.6.0",
     "yaml": "^1.10.2"
   },
   "devDependencies": {
@@ -30,7 +30,7 @@
     "@types/jest": "^27.4.1",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.9.4",
-    "cdk8s-cli": "^1.0.143",
+    "cdk8s-cli": "^1.0.145",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
     "eslint-config-oclif-typescript": "^1.0.2",
