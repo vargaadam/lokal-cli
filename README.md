@@ -96,11 +96,16 @@ apps:
 ```
 # Commands
 <!-- commands -->
-* [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
-* [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
-* [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
-* [`lkl help [COMMAND]`](#lkl-help-command)
-* [`lkl init WORKINGDIR`](#lkl-init-workingdir)
+- [loKal](#lokal)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Config](#config)
+- [Commands](#commands)
+  - [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
+  - [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
+  - [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
+  - [`lkl help [COMMAND]`](#lkl-help-command)
+  - [`lkl init WORKINGDIR`](#lkl-init-workingdir)
 
 ## `lkl delete WORKINGDIR`
 
