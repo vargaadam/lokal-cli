@@ -1,15 +1,15 @@
 {
-  "name": "lokal",
+  "name": "lokal-cli",
   "version": "0.0.1",
-  "description": "lokal",
+  "description": "lokal-cli",
   "author": "Adam Varga @vargaadam",
   "bin": {
     "lkl": "./bin/run"
   },
-  "homepage": "https://github.com/Magyar-Bankholding-Zrt/lokal",
+  "homepage": "https://github.com/vargaadam/lokal-cli",
   "license": "MIT",
   "main": "dist/index.js",
-  "repository": "Magyar-Bankholding-Zrt/lokal",
+  "repository": "vargaadam/lokal-cli",
   "files": [
     "/bin",
     "/dist",
@@ -54,7 +54,7 @@
     "topicSeparator": " ",
     "topics": {
       "init": {
-        "description": "Clone the repository if it specified"
+        "description": "Clone the repository if it's specified"
       },
       "generate": {
         "description": "Generate the required manifests"
@@ -79,7 +79,8 @@
     "node": ">=12.0.0"
   },
   "keywords": [
-    "oclif"
+    "kubernetes",
+    "development"
   ],
   "types": "dist/index.d.ts"
 }
