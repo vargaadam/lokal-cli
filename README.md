@@ -4,7 +4,8 @@ loKal
 <!-- toc -->
 * [Requirements](#requirements)
 * [Usage](#usage)
-* [Config](#config)
+* [Workspace Config](#workspace-config)
+* [App config](#app-config)
 * [Commands](#commands)
 <!-- tocstop -->
 
@@ -28,78 +29,55 @@ USAGE
 ```
 <!-- usagestop -->
 
-# Config
+# Workspace Config
 
 ```yaml
 version: lokal/v1alpha1
-name: lokal
-workspaces:
-  - name: foo
-    namespace: foo
-    apps:
-      - name: redis
-        alias: foo-redis
-      - name: service1
-        portForward: 3000
-      - name: service2
-        portForward: 3001
-  - name: bar
-    namespace: bar
-    apps:
-      - name: redis
-        alias: bar-redis
-      - name: service2
-        portForward: 3002
-
-apps:
-  # redis
+kind: Workspace
+name: foo
+namespace: foo
+helmReleases:
   - name: redis
-    helm:
-      repo: https://charts.bitnami.com/bitnami
-      remoteChart: redis
-      valuesFiles:
-        - ./charts/redis/values.yaml
-
-  # service1
+    repo: https://charts.bitnami.com/bitnami
+    remoteChart: redis
+    # valuesFiles:
+    #   - ./charts/redis/values.yaml
+apps:
   - name: service1
     repository:
-      localPath: service
       repoPath: "git@github.com:vargaadam/example-service.git"
-    manifests:
-      deployment:
-        port: 3000
-    build:
-      image: test/image1
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: "src/**/*.js"
-            dest: .
-
-  # service2
+    portForward: 3000
   - name: service2
     repository:
-      localPath: service2
       repoPath: "git@github.com:vargaadam/example-service.git"
-    manifests:
-      deployment:
-        port: 3000
-    build:
-      image: test/image2
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: "src/**/*.js"
-            dest: .
+    portForward: 3001
+
+```
+
+# App config
+
+```yaml
+version: lokal/v1alpha1
+kind: App
+name: service1
+manifests:
+  deployment:
+    port: 3000
+build:
+  docker:
+    dockerfile: Dockerfile
+  sync:
+    manual:
+      - src: "src/**/*.js"
+        dest: .
 ```
 # Commands
 <!-- commands -->
 - [loKal](#lokal)
 - [Requirements](#requirements)
 - [Usage](#usage)
-- [Config](#config)
+- [Workspace Config](#workspace-config)
+- [App config](#app-config)
 - [Commands](#commands)
   - [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
   - [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)

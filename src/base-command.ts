@@ -1,19 +1,38 @@
 import { Command, Flags } from "@oclif/core";
-import { AppOptions } from "./modules/app";
-import { WorkspaceOptions } from "./modules/workspace";
+import path from "path";
 
-export interface LokalConfig {
-  name: string;
-  workspaces: WorkspaceOptions[];
-  apps: AppOptions[];
-}
+const CONFIG_FILE_NAME = ".lokal";
+const OUTPUT_DIR_NAME = ".lokal";
 
 export default abstract class BaseCommand extends Command {
+  workingDir!: string;
+  workspaceConfigFilePath!: string;
+  outDir!: string;
+
   static strict = false;
 
   static args = [{ name: "workingDir", required: true }];
 
   static flags = {
-    workspaces: Flags.string({ char: "w", multiple: true, required: true }),
+    configFile: Flags.string({
+      char: "c",
+      default: CONFIG_FILE_NAME,
+      required: false,
+      description: "the lokal config file name",
+    }),
+    outDir: Flags.string({
+      char: "o",
+      default: OUTPUT_DIR_NAME,
+      required: false,
+      description: "The generated manifests directory",
+    }),
   };
+
+  async init() {
+    const { flags, args } = await this.parse(BaseCommand);
+
+    this.workingDir = path.join(process.cwd(), args.workingDir);
+    this.workspaceConfigFilePath = path.join(this.workingDir, flags.configFile);
+    this.outDir = path.join(this.workingDir, flags.outDir);
+  }
 }

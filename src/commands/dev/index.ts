@@ -1,9 +1,8 @@
 import BaseCommand from "../../base-command";
-import { Skaffold } from "../../content/skaffold";
-import { Lokal } from "../../modules/lokal";
+import { Workspace } from "../../workspace";
 
 export default class Dev extends BaseCommand {
-  static examples = ["$ lkl dev DIRECTORY --workspaces WORKSPACE1 WORKSPACE2"];
+  static examples = ["$ lkl dev WORKING_DIR"];
 
   static flags = {
     ...BaseCommand.flags,
@@ -12,22 +11,18 @@ export default class Dev extends BaseCommand {
   static args = [...BaseCommand.args];
 
   async run() {
-    const { flags, args } = await this.parse(Dev);
+    const workspace = new Workspace(
+      this.workingDir,
+      this.outDir,
+      this.workspaceConfigFilePath
+    );
 
-    const lokal = new Lokal(args.workingDir);
+    this.log("Generating manifests...");
 
-    this.log("Initializing");
+    await workspace.generateManifests(this.outDir);
 
-    await lokal.init(flags.workspaces, false);
+    this.log("Starting to deploy...");
 
-    this.log("Generating manifests");
-
-    await lokal.generate(flags.workspaces);
-
-    const skaffold = new Skaffold(lokal.resourcesFilePath);
-
-    this.log("Starting to deploy");
-
-    skaffold.runDev();
+    await workspace.dev();
   }
 }

@@ -3,20 +3,21 @@ import path from "path";
 import simpleGit, { CheckRepoActions, SimpleGit } from "simple-git";
 
 export interface RepositoryOptions {
-  name: string;
-  repoPath: string;
-  localPath: string;
+  repoPath?: string;
 }
 
 export class Repository {
-  private git: SimpleGit;
-  private repoDir: string;
+  git: SimpleGit;
+  repositoryOptions: RepositoryOptions;
+  repoDir: string;
 
   constructor(
-    private repositoryOptions: RepositoryOptions,
-    workingDir: string
+    workingDir: string,
+    name: string,
+    repositoryOptions: RepositoryOptions
   ) {
-    this.repoDir = path.join(workingDir, this.repositoryOptions.localPath);
+    this.repositoryOptions = repositoryOptions;
+    this.repoDir = path.join(workingDir, name);
     if (!fs.existsSync(this.repoDir)) {
       fs.mkdirSync(this.repoDir);
     }
@@ -25,6 +26,10 @@ export class Repository {
   }
 
   async clone() {
+    if (!this.repositoryOptions.repoPath) {
+      return;
+    }
+
     const isGitRepo = await this.git.checkIsRepo(CheckRepoActions.IS_REPO_ROOT);
 
     if (isGitRepo) {
@@ -35,6 +40,12 @@ export class Repository {
   }
 
   async pull() {
+    const isGitRepo = await this.git.checkIsRepo(CheckRepoActions.IS_REPO_ROOT);
+
+    if (!isGitRepo) {
+      return;
+    }
+
     await this.git.pull();
   }
 }

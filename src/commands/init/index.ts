@@ -1,9 +1,9 @@
 import BaseCommand from "../../base-command";
 import { Flags } from "@oclif/core";
-import { Lokal } from "../../modules/lokal";
+import { Workspace } from "../../workspace";
 
 export default class Init extends BaseCommand {
-  static examples = ["$ lkl init DIRECTORY --workspaces WORKSPACE"];
+  static examples = ["$ lkl init WORKING_DIR"];
 
   static args = [...BaseCommand.args];
 
@@ -13,12 +13,15 @@ export default class Init extends BaseCommand {
   };
 
   async run() {
-    const { flags, args } = await this.parse(Init);
+    const { flags } = await this.parse(Init);
 
-    this.log("Initializing!");
+    this.log("Initializing repositories...");
 
-    await new Lokal(args.workingDir).init(flags.workspaces, flags.pull);
-
-    this.log("Initialization is complete!");
+    const workspace = new Workspace(
+      this.workingDir,
+      this.outDir,
+      this.workspaceConfigFilePath
+    );
+    await workspace.initApps(flags.pull);
   }
 }
