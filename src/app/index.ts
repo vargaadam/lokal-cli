@@ -40,7 +40,7 @@ export class App extends Yaml<AppOptions> {
       const deployment = new Deployment(manifestContainer);
       deployment.create({
         appName: this.appName,
-        image: this.options.build.image,
+        image: this.appName,
         port: deploymentOptions.port,
       });
     }
@@ -50,8 +50,9 @@ export class App extends Yaml<AppOptions> {
     if (this.options.build) {
       const context = path.join(this.workingDir, this.appName);
       skaffold.addArtifact({
-        context,
         ...this.options.build,
+        context,
+        image: this.appName,
       });
     }
 

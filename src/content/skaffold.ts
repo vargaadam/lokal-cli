@@ -1,13 +1,13 @@
 import { Yaml } from "./base/yaml";
 
-interface SkaffoldBuildSyncOptions {
+export interface SkaffoldBuildSyncOptions {
   src: string;
   dest: string;
 }
 
 export interface SkaffoldBuildOptions {
   image: string;
-  context?: string;
+  context: string;
   docker: { dockerfile: string };
   sync: SkaffoldBuildSyncOptions[];
 }
