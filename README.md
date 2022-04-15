@@ -73,17 +73,11 @@ build:
 ```
 # Commands
 <!-- commands -->
-- [loKal](#lokal)
-- [Requirements](#requirements)
-- [Usage](#usage)
-- [Workspace Config](#workspace-config)
-- [App config](#app-config)
-- [Commands](#commands)
-  - [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
-  - [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
-  - [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
-  - [`lkl help [COMMAND]`](#lkl-help-command)
-  - [`lkl init WORKINGDIR`](#lkl-init-workingdir)
+* [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
+* [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
+* [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
+* [`lkl help [COMMAND]`](#lkl-help-command)
+* [`lkl init WORKINGDIR`](#lkl-init-workingdir)
 
 ## `lkl delete WORKINGDIR`
 
