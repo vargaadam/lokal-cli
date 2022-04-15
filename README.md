@@ -83,13 +83,14 @@ build:
 
 ```
 USAGE
-  $ lkl delete [WORKINGDIR] -w <value>
+  $ lkl delete [WORKINGDIR] [-c <value>] [-o <value>]
 
 FLAGS
-  -w, --workspaces=<value>...  (required)
+  -c, --configFile=<value>  [default: .lokal] the lokal config file name
+  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
 
 EXAMPLES
-  $ lkl delete DIRECTORY --workspaces WORKSPACE1 WORKSPACE2
+  $ lkl delete WORKING_DIR
 ```
 
 _See code: [dist/commands/delete/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/delete/index.ts)_
@@ -98,13 +99,14 @@ _See code: [dist/commands/delete/index.ts](https://github.com/vargaadam/lokal-cl
 
 ```
 USAGE
-  $ lkl dev [WORKINGDIR] -w <value>
+  $ lkl dev [WORKINGDIR] [-c <value>] [-o <value>]
 
 FLAGS
-  -w, --workspaces=<value>...  (required)
+  -c, --configFile=<value>  [default: .lokal] the lokal config file name
+  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
 
 EXAMPLES
-  $ lkl dev DIRECTORY --workspaces WORKSPACE1 WORKSPACE2
+  $ lkl dev WORKING_DIR
 ```
 
 _See code: [dist/commands/dev/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/dev/index.ts)_
@@ -113,13 +115,14 @@ _See code: [dist/commands/dev/index.ts](https://github.com/vargaadam/lokal-cli/b
 
 ```
 USAGE
-  $ lkl generate [WORKINGDIR] -w <value>
+  $ lkl generate [WORKINGDIR] [-c <value>] [-o <value>]
 
 FLAGS
-  -w, --workspaces=<value>...  (required)
+  -c, --configFile=<value>  [default: .lokal] the lokal config file name
+  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
 
 EXAMPLES
-  $ lkl generate DIRECTORY --workspaces WORKSPACE1 WORKSPACE2
+  $ lkl generate WORKING_DIR
 ```
 
 _See code: [dist/commands/generate/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/generate/index.ts)_
@@ -148,14 +151,15 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.1
 
 ```
 USAGE
-  $ lkl init [WORKINGDIR] -w <value> [--pull]
+  $ lkl init [WORKINGDIR] [-c <value>] [-o <value>] [--pull]
 
 FLAGS
-  -w, --workspaces=<value>...  (required)
+  -c, --configFile=<value>  [default: .lokal] the lokal config file name
+  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
   --pull
 
 EXAMPLES
-  $ lkl init DIRECTORY --workspaces WORKSPACE
+  $ lkl init WORKING_DIR
 ```
 
 _See code: [dist/commands/init/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/init/index.ts)_
