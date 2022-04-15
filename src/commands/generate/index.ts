@@ -1,10 +1,8 @@
 import BaseCommand from "../../base-command";
-import { Lokal } from "../../modules/lokal";
+import { Workspace } from "../../workspace";
 
 export default class Generate extends BaseCommand {
-  static examples = [
-    "$ lkl generate DIRECTORY --workspaces WORKSPACE1 WORKSPACE2",
-  ];
+  static examples = ["$ lkl generate WORKING_DIR"];
 
   static flags = {
     ...BaseCommand.flags,
@@ -13,12 +11,14 @@ export default class Generate extends BaseCommand {
   static args = [...BaseCommand.args];
 
   async run() {
-    const { flags, args } = await this.parse(Generate);
+    const workspace = new Workspace(
+      this.workingDir,
+      this.outDir,
+      this.workspaceConfigFilePath
+    );
 
-    this.log("Generating manifests!");
+    this.log("Generating manifests...");
 
-    await new Lokal(args.workingDir).generate(flags.workspaces);
-
-    this.log("Generation is complete!");
+    await workspace.generateManifests(this.outDir);
   }
 }

@@ -1,20 +1,18 @@
-import child_process from "child_process";
-import path from "path";
 import { Yaml } from "./base/yaml";
 
-interface BuildSyncOptions {
+interface SkaffoldBuildSyncOptions {
   src: string;
   dest: string;
 }
 
-export interface BuildOptions {
+export interface SkaffoldBuildOptions {
   image: string;
   context?: string;
   docker: { dockerfile: string };
-  sync: BuildSyncOptions[];
+  sync: SkaffoldBuildSyncOptions[];
 }
 
-export interface PortForwardOptions {
+export interface SkaffoldPortForwardOptions {
   resourceType?: string;
   resourceName: string;
   namespace: string;
@@ -22,8 +20,8 @@ export interface PortForwardOptions {
   localPort: number;
 }
 
-export interface HelmReleaseOptions {
-  name?: string;
+export interface SkaffoldHelmReleaseOptions {
+  name: string;
   namespace?: string;
   createNamespace?: string;
   repo: string;
@@ -31,12 +29,8 @@ export interface HelmReleaseOptions {
   valuesFiles?: string[];
 }
 
-const SKAFFOLD_FILE_NAME = "skaffold.yaml";
-
-export class Skaffold extends Yaml {
-  constructor(resourcesFilePath: string) {
-    const skaffoldFilePath = path.join(resourcesFilePath, SKAFFOLD_FILE_NAME);
-
+export class Skaffold extends Yaml<any> {
+  constructor(skaffoldFilePath: string) {
     super(skaffoldFilePath);
 
     this.content = {
@@ -60,27 +54,15 @@ export class Skaffold extends Yaml {
     };
   }
 
-  runDev() {
-    child_process.execSync(`skaffold dev -f ${this.filePath}`, {
-      stdio: "inherit",
-    });
-  }
-
-  runDelete() {
-    child_process.execSync(`skaffold delete -f ${this.filePath}`, {
-      stdio: "inherit",
-    });
-  }
-
-  addManifestsPath(manifestPath: string) {
+  addManifestPath(manifestPath: string) {
     this.content.deploy.kubectl.manifests.push(manifestPath);
   }
 
-  addArtifact(buildOptions: BuildOptions) {
+  addArtifact(buildOptions: SkaffoldBuildOptions) {
     this.content.build.artifacts.push(buildOptions);
   }
 
-  addPortForward(portForwardOptions: PortForwardOptions) {
+  addPortForward(portForwardOptions: SkaffoldPortForwardOptions) {
     this.content.portForward.push({
       resourceType: "Service",
       ...portForwardOptions,
@@ -88,12 +70,10 @@ export class Skaffold extends Yaml {
   }
 
   addHelmRelease(
-    releaseName: string,
     namespace: string,
-    helmReleaseOptions: HelmReleaseOptions
+    helmReleaseOptions: SkaffoldHelmReleaseOptions
   ) {
     this.content.deploy.helm.releases.push({
-      name: releaseName,
       namespace,
       createNamespace: true,
       ...helmReleaseOptions,
