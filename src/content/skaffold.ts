@@ -5,11 +5,31 @@ export interface SkaffoldBuildSyncOptions {
   dest: string;
 }
 
-export interface SkaffoldBuildOptions {
+export interface SkaffoldBuildArtifactsOptions {
   image: string;
   context: string;
   docker: { dockerfile: string };
-  sync: SkaffoldBuildSyncOptions[];
+  sync: {
+    manual: SkaffoldBuildSyncOptions[];
+  };
+}
+
+export interface SkaffoldHelmReleaseOptions {
+  name: string;
+  namespace?: string;
+  createNamespace?: boolean;
+  repo: string;
+  remoteChart: string;
+  valuesFiles?: string[];
+}
+
+export interface SkaffoldDeployOptions {
+  kubectl: {
+    manifests: string[];
+  };
+  helm: {
+    releases: SkaffoldHelmReleaseOptions[];
+  };
 }
 
 export interface SkaffoldPortForwardOptions {
@@ -20,16 +40,20 @@ export interface SkaffoldPortForwardOptions {
   localPort: number;
 }
 
-export interface SkaffoldHelmReleaseOptions {
-  name: string;
-  namespace?: string;
-  createNamespace?: string;
-  repo: string;
-  remoteChart: string;
-  valuesFiles?: string[];
+export interface SkaffoldOptions {
+  apiVersion: string;
+  kind: string;
+  deploy: SkaffoldDeployOptions;
+  build: {
+    local: {
+      push: boolean;
+    };
+    artifacts: SkaffoldBuildArtifactsOptions[];
+  };
+  portForward: SkaffoldPortForwardOptions[];
 }
 
-export class Skaffold extends Yaml<any> {
+export class Skaffold extends Yaml<SkaffoldOptions> {
   constructor(skaffoldFilePath: string) {
     super(skaffoldFilePath);
 
@@ -58,7 +82,7 @@ export class Skaffold extends Yaml<any> {
     this.content.deploy.kubectl.manifests.push(manifestPath);
   }
 
-  addArtifact(buildOptions: SkaffoldBuildOptions) {
+  addArtifact(buildOptions: SkaffoldBuildArtifactsOptions) {
     this.content.build.artifacts.push(buildOptions);
   }
 

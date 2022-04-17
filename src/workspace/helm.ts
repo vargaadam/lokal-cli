@@ -3,7 +3,7 @@ import { Skaffold } from "../content/skaffold";
 export interface HelmReleaseOptions {
   name: string;
   namespace?: string;
-  createNamespace?: string;
+  createNamespace?: boolean;
   repo: string;
   remoteChart: string;
   valuesFiles?: string[];

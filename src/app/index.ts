@@ -1,14 +1,24 @@
 import path from "path";
 import { ManifestContainer, ManifestOptions } from "./manifests";
-import { SkaffoldBuildOptions, Skaffold } from "../content/skaffold";
+import { Skaffold } from "../content/skaffold";
 import { Yaml } from "../content/base/yaml";
 import { Deployment } from "../content/k8s/deployment";
 import { WorkspaceAppOptions } from "../workspace";
 
+export interface BuildOptions {
+  image: string;
+  context: string;
+  docker: { dockerfile: string };
+  sync: Array<{
+    src: string;
+    dest: string;
+  }>;
+}
+
 export interface AppOptions {
   name: string;
   manifests?: ManifestOptions;
-  build?: SkaffoldBuildOptions;
+  build?: BuildOptions;
 }
 
 export class App extends Yaml<AppOptions> {
@@ -35,7 +45,6 @@ export class App extends Yaml<AppOptions> {
     }
 
     const deploymentOptions = this.options.manifests.deployment;
-
     if (deploymentOptions) {
       const deployment = new Deployment(manifestContainer);
       deployment.create({
@@ -47,22 +56,24 @@ export class App extends Yaml<AppOptions> {
   }
 
   initSkaffold(namespace: string, skaffold: Skaffold) {
-    if (this.options.build) {
+    const buildOptions = this.options.build;
+    if (buildOptions) {
       const context = path.join(this.workingDir, this.appName);
       skaffold.addArtifact({
-        ...this.options.build,
+        docker: { dockerfile: buildOptions.docker.dockerfile },
+        sync: {
+          manual: buildOptions.sync,
+        },
         context,
         image: this.appName,
       });
     }
 
-    if (
-      this.options.manifests?.deployment &&
-      this.workspaceAppOptions.portForward
-    ) {
+    const deploymentOptions = this.options.manifests?.deployment;
+    if (deploymentOptions && this.workspaceAppOptions.portForward) {
       skaffold.addPortForward({
         resourceName: this.appName,
-        port: this.options.manifests.deployment.port,
+        port: deploymentOptions.port,
         localPort: this.workspaceAppOptions.portForward,
         namespace,
       });
