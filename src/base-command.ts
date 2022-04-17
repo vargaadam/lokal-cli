@@ -18,7 +18,7 @@ export default abstract class BaseCommand extends Command {
       char: "c",
       default: CONFIG_FILE_NAME,
       required: false,
-      description: "the lokal config file name",
+      description: "The lokal config file name",
     }),
     outDir: Flags.string({
       char: "o",

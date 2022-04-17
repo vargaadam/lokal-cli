@@ -53,7 +53,7 @@
     ],
     "topicSeparator": " ",
     "topics": {
-      "init": {
+      "clone": {
         "description": "Clone the repository if it's specified"
       },
       "generate": {

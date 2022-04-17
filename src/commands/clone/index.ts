@@ -2,8 +2,8 @@ import BaseCommand from "../../base-command";
 import { Flags } from "@oclif/core";
 import { Workspace } from "../../workspace";
 
-export default class Init extends BaseCommand {
-  static examples = ["$ lkl init WORKING_DIR"];
+export default class Clone extends BaseCommand {
+  static examples = ["$ lkl clone WORKING_DIR"];
 
   static args = [...BaseCommand.args];
 
@@ -13,7 +13,7 @@ export default class Init extends BaseCommand {
   };
 
   async run() {
-    const { flags } = await this.parse(Init);
+    const { flags } = await this.parse(Clone);
 
     this.log("Initializing repositories...");
 
@@ -22,6 +22,6 @@ export default class Init extends BaseCommand {
       this.outDir,
       this.workspaceConfigFilePath
     );
-    await workspace.initApps(flags.pull);
+    await workspace.cloneApps(flags.pull);
   }
 }

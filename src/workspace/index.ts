@@ -41,9 +41,7 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     this.skaffold = new Skaffold(skaffoldFilePath);
   }
 
-  async initApps(isPull: boolean): Promise<App[]> {
-    const apps = [];
-
+  async cloneApps(isPull: boolean) {
     for (const workspaceAppOptions of this.options.apps || []) {
       if (workspaceAppOptions.repository) {
         const repository = new Repository(
@@ -58,7 +56,13 @@ export class Workspace extends Yaml<WorkspaceOptions> {
           await repository.pull();
         }
       }
+    }
+  }
 
+  async initApps(): Promise<App[]> {
+    const apps = [];
+
+    for (const workspaceAppOptions of this.options.apps || []) {
       const appConfigFilePath = path.join(
         this.workingDir,
         workspaceAppOptions.name,
@@ -77,7 +81,7 @@ export class Workspace extends Yaml<WorkspaceOptions> {
   }
 
   async generateManifests(outDir: string) {
-    const apps = await this.initApps(false);
+    const apps = await this.initApps();
 
     const kApp = new k.App({
       outdir: outDir,
