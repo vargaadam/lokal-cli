@@ -9,7 +9,8 @@ export interface BuildOptions {
   image: string;
   context: string;
   docker: { dockerfile: string };
-  sync: Array<{
+  sync: {
+    manual: Array<{
     src: string;
     dest: string;
   }>;
@@ -61,9 +62,7 @@ export class App extends Yaml<AppOptions> {
       const context = path.join(this.workingDir, this.appName);
       skaffold.addArtifact({
         docker: { dockerfile: buildOptions.docker.dockerfile },
-        sync: {
-          manual: buildOptions.sync,
-        },
+        sync: buildOptions.sync,
         context,
         image: this.appName,
       });
