@@ -1,25 +1,34 @@
 import path from "path";
-import { ManifestContainer, ManifestOptions } from "./manifests";
+import { ManifestContainer } from "./manifests";
 import { Skaffold } from "../content/skaffold";
 import { Yaml } from "../content/base/yaml";
-import { Deployment } from "../content/k8s/deployment";
+import { Deployment, DeploymentSize } from "../content/k8s/deployment";
 import { WorkspaceAppOptions } from "../workspace";
 
-export interface BuildOptions {
+export interface AppBuildOptions {
   image: string;
   context: string;
   docker: { dockerfile: string };
   sync: {
     manual: Array<{
-    src: string;
-    dest: string;
-  }>;
+      src: string;
+      dest: string;
+    }>;
+  };
+}
+
+export interface AppManifestsOptions {
+  deployment?: {
+    port: number;
+    size?: DeploymentSize;
+    replicas?: number;
+  };
 }
 
 export interface AppOptions {
   name: string;
-  manifests?: ManifestOptions;
-  build?: BuildOptions;
+  manifests?: AppManifestsOptions;
+  build?: AppBuildOptions;
 }
 
 export class App extends Yaml<AppOptions> {
@@ -52,6 +61,8 @@ export class App extends Yaml<AppOptions> {
         appName: this.appName,
         image: this.appName,
         port: deploymentOptions.port,
+        replicas: deploymentOptions.replicas,
+        size: deploymentOptions.size,
       });
     }
   }

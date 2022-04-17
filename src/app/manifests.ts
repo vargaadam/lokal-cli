@@ -1,14 +1,6 @@
 import * as k from "cdk8s";
 import { KubeNamespace } from "cdk8s-plus-22/lib/imports/k8s";
 
-export interface ManifestDeploymentOptions {
-  port: number;
-}
-
-export interface ManifestOptions {
-  deployment?: ManifestDeploymentOptions;
-}
-
 export class ManifestContainer {
   name: string;
   chart: k.Chart;
