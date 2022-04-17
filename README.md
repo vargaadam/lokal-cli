@@ -63,7 +63,7 @@ name: service1
 manifests:
   deployment:
     replicas: 1
-    size: SMALL | MEDIUM | LARGE
+    size: NO_LIMIT | SMALL | MEDIUM | LARGE
     port: 3000
 build:
   docker:

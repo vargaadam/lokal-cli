@@ -7,6 +7,7 @@ export enum DeploymentSize {
   SMALL = "SMALL",
   MEDIUM = "MEDIUM",
   LARGE = "LARGE",
+  NO_LIMIT = "NO_LIMIT",
 }
 export interface DeploymentOptions {
   appName: string;
@@ -94,8 +95,10 @@ export class Deployment {
         return mediumResources;
       case DeploymentSize.LARGE:
         return largeResources;
+      case DeploymentSize.NO_LIMIT:
+        return;
       default:
-        return smallResources;
+        return;
     }
   }
 }
