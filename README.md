@@ -62,6 +62,8 @@ kind: App
 name: service1
 manifests:
   deployment:
+    replicas: 1
+    size: SMALL | MEDIUM | LARGE
     port: 3000
 build:
   docker:
@@ -73,11 +75,34 @@ build:
 ```
 # Commands
 <!-- commands -->
-* [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
-* [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
-* [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
-* [`lkl help [COMMAND]`](#lkl-help-command)
-* [`lkl init WORKINGDIR`](#lkl-init-workingdir)
+- [loKal](#lokal)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Workspace Config](#workspace-config)
+- [App config](#app-config)
+- [Commands](#commands)
+  - [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
+  - [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
+  - [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
+  - [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
+  - [`lkl help [COMMAND]`](#lkl-help-command)
+
+## `lkl clone WORKINGDIR`
+
+```
+USAGE
+  $ lkl clone [WORKINGDIR] [-c <value>] [-o <value>] [--pull]
+
+FLAGS
+  -c, --configFile=<value>  [default: .lokal] The lokal config file name
+  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
+  --pull
+
+EXAMPLES
+  $ lkl clone WORKING_DIR
+```
+
+_See code: [dist/commands/clone/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/clone/index.ts)_
 
 ## `lkl delete WORKINGDIR`
 
@@ -86,7 +111,7 @@ USAGE
   $ lkl delete [WORKINGDIR] [-c <value>] [-o <value>]
 
 FLAGS
-  -c, --configFile=<value>  [default: .lokal] the lokal config file name
+  -c, --configFile=<value>  [default: .lokal] The lokal config file name
   -o, --outDir=<value>      [default: .lokal] The generated manifests directory
 
 EXAMPLES
@@ -102,7 +127,7 @@ USAGE
   $ lkl dev [WORKINGDIR] [-c <value>] [-o <value>]
 
 FLAGS
-  -c, --configFile=<value>  [default: .lokal] the lokal config file name
+  -c, --configFile=<value>  [default: .lokal] The lokal config file name
   -o, --outDir=<value>      [default: .lokal] The generated manifests directory
 
 EXAMPLES
@@ -118,7 +143,7 @@ USAGE
   $ lkl generate [WORKINGDIR] [-c <value>] [-o <value>]
 
 FLAGS
-  -c, --configFile=<value>  [default: .lokal] the lokal config file name
+  -c, --configFile=<value>  [default: .lokal] The lokal config file name
   -o, --outDir=<value>      [default: .lokal] The generated manifests directory
 
 EXAMPLES
@@ -146,21 +171,4 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
-
-## `lkl init WORKINGDIR`
-
-```
-USAGE
-  $ lkl init [WORKINGDIR] [-c <value>] [-o <value>] [--pull]
-
-FLAGS
-  -c, --configFile=<value>  [default: .lokal] the lokal config file name
-  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
-  --pull
-
-EXAMPLES
-  $ lkl init WORKING_DIR
-```
-
-_See code: [dist/commands/init/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/init/index.ts)_
 <!-- commandsstop -->
