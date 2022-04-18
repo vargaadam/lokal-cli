@@ -14,6 +14,7 @@ helmReleases:
 
 apps:
   - name: service1
+    lokalFile: ".lokal"
     repository:
       localPath: "./apps/service1"
       repoUrl: "git@github.com:vargaadam/example-service.git"
