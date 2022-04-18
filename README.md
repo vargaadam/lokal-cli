@@ -37,9 +37,12 @@ kind: Workspace
 name: foo
 namespace: foo
 helmReleases:
+  - name: mongodb
+    chartPath: ./charts/mongodb
   - name: redis
     repo: https://charts.bitnami.com/bitnami
     remoteChart: redis
+    version: 16.8.5
     valuesFiles:
       - ./charts/redis/values.yaml
 apps:

@@ -18,8 +18,9 @@ export interface SkaffoldHelmReleaseOptions {
   name: string;
   namespace?: string;
   createNamespace?: boolean;
-  repo: string;
-  remoteChart: string;
+  repo?: string;
+  remoteChart?: string;
+  chartPath?: string;
   valuesFiles?: string[];
 }
 

@@ -1,5 +1,5 @@
 import child_process from "child_process";
-import path from "path";
+import path, { join } from "path";
 import * as k from "cdk8s";
 import { App } from "../app";
 import { Repository, RepositoryOptions } from "./repository";
@@ -94,11 +94,17 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     manifestContainer.addNamespace(this.options.namespace);
 
     for (const helmReleaseOptions of this.options.helmReleases || []) {
+      let chartPath = helmReleaseOptions.chartPath
+        ? join(this.workingDir, helmReleaseOptions.chartPath)
+        : undefined;
+
       const valuesFiles = helmReleaseOptions.valuesFiles?.map((valuesFile) =>
         path.join(this.workingDir, valuesFile)
       );
+
       const helmRelease = new HelmRelease(this.options.namespace, {
         ...helmReleaseOptions,
+        chartPath,
         valuesFiles,
       });
 
