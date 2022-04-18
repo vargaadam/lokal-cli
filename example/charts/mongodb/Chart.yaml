@@ -1,0 +1,8 @@
+apiVersion: v2
+description: mongodb
+name: mongodb
+version: 0.0.1
+dependencies:
+  - name: mongodb
+    version: 11.1.5
+    repository: https://charts.bitnami.com/bitnami

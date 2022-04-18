@@ -11,3 +11,8 @@
 node_modules
 oclif.manifest.json
 .lokal
+
+example/service1
+example/service2
+example/charts/mongodb/charts
+example/charts/mongodb/chart.lock

@@ -1,0 +1,23 @@
+version: lokal/v1alpha1
+kind: Workspace
+name: foo
+namespace: foo
+helmReleases:
+  - name: redis
+    repo: https://charts.bitnami.com/bitnami
+    version: 16.8.5
+    remoteChart: redis
+    valuesFiles:
+      - ./charts/redis/values.yaml
+  - name: mongodb
+    chartPath: ./charts/mongodb
+
+apps:
+  - name: service1
+    repository:
+      repoPath: "git@github.com:vargaadam/example-service.git"
+    portForward: 3000
+  - name: service2
+    repository:
+      repoPath: "git@github.com:vargaadam/example-service.git"
+    portForward: 3001
