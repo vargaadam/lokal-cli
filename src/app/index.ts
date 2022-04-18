@@ -4,6 +4,7 @@ import { Skaffold } from "../content/skaffold";
 import { Yaml } from "../content/base/yaml";
 import { Deployment, DeploymentSize } from "../content/k8s/deployment";
 import { WorkspaceAppOptions } from "../workspace";
+import { ConfigMap } from "../content/k8s/config-map";
 
 export interface AppBuildOptions {
   image: string;
@@ -22,6 +23,10 @@ export interface AppManifestsOptions {
     port: number;
     size?: DeploymentSize;
     replicas?: number;
+  };
+  configMap?: {
+    fromFile?: string;
+    env?: Record<string, string>;
   };
 }
 
@@ -54,15 +59,33 @@ export class App extends Yaml<AppOptions> {
       return;
     }
 
+    let configMap;
+    const configMapOptions = this.options.manifests.configMap;
+    if (configMapOptions) {
+      const fromFile = configMapOptions.fromFile
+        ? path.join(
+            this.workingDir,
+            this.workspaceAppOptions.name,
+            configMapOptions.fromFile
+          )
+        : undefined;
+
+      configMap = new ConfigMap(manifestContainer).create({
+        appName: this.appName,
+        env: configMapOptions.env,
+        fromFile,
+      });
+    }
+
     const deploymentOptions = this.options.manifests.deployment;
     if (deploymentOptions) {
-      const deployment = new Deployment(manifestContainer);
-      deployment.create({
+      new Deployment(manifestContainer).create({
         appName: this.appName,
         image: this.appName,
         port: deploymentOptions.port,
         replicas: deploymentOptions.replicas,
         size: deploymentOptions.size,
+        configMap: configMap,
       });
     }
   }

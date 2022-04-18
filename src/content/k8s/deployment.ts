@@ -1,7 +1,7 @@
-import { Size } from "cdk8s";
+import { ApiObject, JsonPatch, Size } from "cdk8s";
 import * as kplus from "cdk8s-plus-22";
-import { Cpu, ImagePullPolicy, Resources } from "cdk8s-plus-22";
 import { ManifestContainer } from "../../app/manifests";
+import { BaseK8s } from "./base";
 
 export enum DeploymentSize {
   SMALL = "SMALL",
@@ -15,37 +15,45 @@ export interface DeploymentOptions {
   port: number;
   replicas?: number;
   size?: DeploymentSize;
+  configMap?: kplus.ConfigMap;
 }
 
-export class Deployment {
-  manifestContainer: ManifestContainer;
-
+export class Deployment extends BaseK8s<DeploymentOptions> {
   constructor(manifestContainer: ManifestContainer) {
-    this.manifestContainer = manifestContainer;
+    super(manifestContainer);
   }
 
   create(options: DeploymentOptions) {
-    const chart = this.manifestContainer.chart;
-
-    const deployment = new kplus.Deployment(chart, options.appName, {
-      metadata: {
-        name: options.appName,
-      },
-      replicas: options.replicas || 1,
-      containers: [
-        {
-          image: options.image,
-          port: options.port,
-          imagePullPolicy: ImagePullPolicy.NEVER,
-          resources: this.getContainerResource(options.size),
-        },
-      ],
-    });
+    const deployment = new kplus.Deployment(
+      this.chart,
+      options.appName.concat("-dp"),
+      {
+        replicas: options.replicas || 1,
+        containers: [
+          {
+            image: options.image,
+            port: options.port,
+            imagePullPolicy: kplus.ImagePullPolicy.NEVER,
+            resources: this.getContainerResource(options.size),
+          },
+        ],
+      }
+    );
 
     deployment.exposeViaService({
       name: options.appName,
       port: options.port,
     });
+
+    if (options.configMap) {
+      const kubeDeployment = ApiObject.of(deployment);
+      kubeDeployment.addDependency(options.configMap);
+      ApiObject.of(kubeDeployment).addJsonPatch(
+        JsonPatch.add("/spec/template/spec/containers/0/envFrom", [
+          { configMapRef: { name: options.configMap.name } },
+        ])
+      );
+    }
 
     return deployment;
   }
@@ -53,38 +61,38 @@ export class Deployment {
   private getContainerResource(deploymentSize?: DeploymentSize) {
     const convertedDeploymentSize = deploymentSize
       ? deploymentSize.toLocaleUpperCase()
-      : deploymentSize;
+      : undefined;
 
-    const smallResources: Resources = {
+    const smallResources: kplus.Resources = {
       memory: {
         request: Size.mebibytes(400),
         limit: Size.mebibytes(2000),
       },
       cpu: {
-        request: Cpu.millis(200),
-        limit: Cpu.millis(1000),
+        request: kplus.Cpu.millis(200),
+        limit: kplus.Cpu.millis(1000),
       },
     };
 
-    const mediumResources: Resources = {
+    const mediumResources: kplus.Resources = {
       memory: {
         request: Size.mebibytes(800),
         limit: Size.mebibytes(2500),
       },
       cpu: {
-        request: Cpu.millis(400),
-        limit: Cpu.millis(1200),
+        request: kplus.Cpu.millis(400),
+        limit: kplus.Cpu.millis(1200),
       },
     };
 
-    const largeResources: Resources = {
+    const largeResources: kplus.Resources = {
       memory: {
         request: Size.mebibytes(1600),
         limit: Size.mebibytes(3000),
       },
       cpu: {
-        request: Cpu.millis(800),
-        limit: Cpu.millis(1400),
+        request: kplus.Cpu.millis(800),
+        limit: kplus.Cpu.millis(1400),
       },
     };
 

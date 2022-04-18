@@ -61,6 +61,10 @@ version: lokal/v1alpha1
 kind: App
 name: service1
 manifests:
+  configMap:
+    fromFile: .env.example
+    env:
+      FOO: FOO
   deployment:
     replicas: 1
     size: NO_LIMIT | SMALL | MEDIUM | LARGE
