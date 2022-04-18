@@ -1,16 +1,9 @@
-import { Resource } from "cdk8s-plus-22";
-import { ManifestContainer } from "../../app/manifests";
+import * as k from "cdk8s";
 
-export abstract class BaseK8s<T> {
-  manifestContainer: ManifestContainer;
+export class BaseK8s<T> {
+  chart: k.Chart;
 
-  constructor(manifestContainer: ManifestContainer) {
-    this.manifestContainer = manifestContainer;
+  constructor(chart: k.Chart) {
+    this.chart = chart;
   }
-
-  get chart() {
-    return this.manifestContainer.chart;
-  }
-
-  abstract create(options: T): Resource;
 }

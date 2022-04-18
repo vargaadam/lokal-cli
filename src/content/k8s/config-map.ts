@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import fs from "fs";
+import * as k from "cdk8s";
 import * as kplus from "cdk8s-plus-22";
-import { ManifestContainer } from "../../app/manifests";
 import { BaseK8s } from "./base";
 
 export interface ConfigMapOptions {
@@ -11,8 +11,8 @@ export interface ConfigMapOptions {
 }
 
 export class ConfigMap extends BaseK8s<ConfigMapOptions> {
-  constructor(manifestContainer: ManifestContainer) {
-    super(manifestContainer);
+  constructor(chart: k.Chart) {
+    super(chart);
   }
 
   create(options: ConfigMapOptions) {

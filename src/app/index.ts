@@ -2,9 +2,8 @@ import path from "path";
 import { ManifestContainer } from "./manifests";
 import { Skaffold } from "../content/skaffold";
 import { Yaml } from "../content/base/yaml";
-import { Deployment, DeploymentSize } from "../content/k8s/deployment";
+import { DeploymentSize } from "../content/k8s/deployment";
 import { WorkspaceAppOptions } from "../workspace";
-import { ConfigMap } from "../content/k8s/config-map";
 
 export interface AppBuildOptions {
   image: string;
@@ -66,7 +65,7 @@ export class App extends Yaml<AppOptions> {
         ? path.join(this.workingDir, this.appName, configMapOptions.fromFile)
         : undefined;
 
-      configMap = new ConfigMap(manifestContainer).create({
+      configMap = manifestContainer.addConfigMap({
         appName: this.appName,
         env: configMapOptions.env,
         fromFile,
@@ -75,7 +74,7 @@ export class App extends Yaml<AppOptions> {
 
     const deploymentOptions = this.options.manifests.deployment;
     if (deploymentOptions) {
-      new Deployment(manifestContainer).create({
+      manifestContainer.addDeployment({
         appName: this.appName,
         image: this.appName,
         port: deploymentOptions.port,

@@ -1,6 +1,5 @@
-import { ApiObject, JsonPatch, Size } from "cdk8s";
+import * as k from "cdk8s";
 import * as kplus from "cdk8s-plus-22";
-import { ManifestContainer } from "../../app/manifests";
 import { BaseK8s } from "./base";
 
 export enum DeploymentSize {
@@ -19,8 +18,8 @@ export interface DeploymentOptions {
 }
 
 export class Deployment extends BaseK8s<DeploymentOptions> {
-  constructor(manifestContainer: ManifestContainer) {
-    super(manifestContainer);
+  constructor(chart: k.Chart) {
+    super(chart);
   }
 
   create(options: DeploymentOptions) {
@@ -46,10 +45,10 @@ export class Deployment extends BaseK8s<DeploymentOptions> {
     });
 
     if (options.configMap) {
-      const kubeDeployment = ApiObject.of(deployment);
+      const kubeDeployment = k.ApiObject.of(deployment);
       kubeDeployment.addDependency(options.configMap);
-      ApiObject.of(kubeDeployment).addJsonPatch(
-        JsonPatch.add("/spec/template/spec/containers/0/envFrom", [
+      k.ApiObject.of(kubeDeployment).addJsonPatch(
+        k.JsonPatch.add("/spec/template/spec/containers/0/envFrom", [
           { configMapRef: { name: options.configMap.name } },
         ])
       );
@@ -65,8 +64,8 @@ export class Deployment extends BaseK8s<DeploymentOptions> {
 
     const smallResources: kplus.Resources = {
       memory: {
-        request: Size.mebibytes(400),
-        limit: Size.mebibytes(2000),
+        request: k.Size.mebibytes(400),
+        limit: k.Size.mebibytes(2000),
       },
       cpu: {
         request: kplus.Cpu.millis(200),
@@ -76,8 +75,8 @@ export class Deployment extends BaseK8s<DeploymentOptions> {
 
     const mediumResources: kplus.Resources = {
       memory: {
-        request: Size.mebibytes(800),
-        limit: Size.mebibytes(2500),
+        request: k.Size.mebibytes(800),
+        limit: k.Size.mebibytes(2500),
       },
       cpu: {
         request: kplus.Cpu.millis(400),
@@ -87,8 +86,8 @@ export class Deployment extends BaseK8s<DeploymentOptions> {
 
     const largeResources: kplus.Resources = {
       memory: {
-        request: Size.mebibytes(1600),
-        limit: Size.mebibytes(3000),
+        request: k.Size.mebibytes(1600),
+        limit: k.Size.mebibytes(3000),
       },
       cpu: {
         request: kplus.Cpu.millis(800),
