@@ -94,10 +94,13 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     manifestContainer.addNamespace(this.options.namespace);
 
     for (const helmReleaseOptions of this.options.helmReleases || []) {
-      const helmRelease = new HelmRelease(
-        this.options.namespace,
-        helmReleaseOptions
+      const valuesFiles = helmReleaseOptions.valuesFiles?.map((valuesFile) =>
+        path.join(this.workingDir, valuesFile)
       );
+      const helmRelease = new HelmRelease(this.options.namespace, {
+        ...helmReleaseOptions,
+        valuesFiles,
+      });
 
       helmRelease.initSkaffold(this.skaffold);
     }

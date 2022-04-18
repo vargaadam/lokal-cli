@@ -40,8 +40,8 @@ helmReleases:
   - name: redis
     repo: https://charts.bitnami.com/bitnami
     remoteChart: redis
-    # valuesFiles:
-    #   - ./charts/redis/values.yaml
+    valuesFiles:
+      - ./charts/redis/values.yaml
 apps:
   - name: service1
     repository:
