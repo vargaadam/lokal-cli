@@ -55,7 +55,7 @@ export class App extends Yaml<AppOptions> {
   }
 
   initManifests(manifestContainer: ManifestContainer) {
-    if (!this.options.manifests || !this.options.build) {
+    if (!this.options.manifests) {
       return;
     }
 
@@ -63,11 +63,7 @@ export class App extends Yaml<AppOptions> {
     const configMapOptions = this.options.manifests.configMap;
     if (configMapOptions) {
       const fromFile = configMapOptions.fromFile
-        ? path.join(
-            this.workingDir,
-            this.workspaceAppOptions.name,
-            configMapOptions.fromFile
-          )
+        ? path.join(this.workingDir, this.appName, configMapOptions.fromFile)
         : undefined;
 
       configMap = new ConfigMap(manifestContainer).create({
