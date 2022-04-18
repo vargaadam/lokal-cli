@@ -48,11 +48,13 @@ helmReleases:
 apps:
   - name: service1
     repository:
-      repoPath: "git@github.com:vargaadam/example-service.git"
+      localPath: "./apps/service1"
+      repoUrl: "git@github.com:vargaadam/example-service.git"
     portForward: 3000
   - name: service2
     repository:
-      repoPath: "git@github.com:vargaadam/example-service.git"
+      localPath: "./apps/service1"
+      repoUrl: "git@github.com:vargaadam/example-service.git"
     portForward: 3001
 
 ```

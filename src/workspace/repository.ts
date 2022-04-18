@@ -1,42 +1,27 @@
 import fs from "fs";
-import path from "path";
 import simpleGit, { CheckRepoActions, SimpleGit } from "simple-git";
-
-export interface RepositoryOptions {
-  repoPath?: string;
-}
 
 export class Repository {
   git: SimpleGit;
-  repositoryOptions: RepositoryOptions;
-  repoDir: string;
+  localPath: string;
 
-  constructor(
-    workingDir: string,
-    name: string,
-    repositoryOptions: RepositoryOptions
-  ) {
-    this.repositoryOptions = repositoryOptions;
-    this.repoDir = path.join(workingDir, name);
-    if (!fs.existsSync(this.repoDir)) {
-      fs.mkdirSync(this.repoDir);
+  constructor(localPath: string) {
+    this.localPath = localPath;
+    if (!fs.existsSync(this.localPath)) {
+      fs.mkdirSync(this.localPath, { recursive: true });
     }
 
-    this.git = simpleGit(this.repoDir);
+    this.git = simpleGit(this.localPath);
   }
 
-  async clone() {
-    if (!this.repositoryOptions.repoPath) {
-      return;
-    }
-
+  async clone(repoUrl: string) {
     const isGitRepo = await this.git.checkIsRepo(CheckRepoActions.IS_REPO_ROOT);
 
     if (isGitRepo) {
       return;
     }
 
-    await this.git.clone(this.repositoryOptions.repoPath, this.repoDir);
+    await this.git.clone(repoUrl, this.localPath);
   }
 
   async pull() {

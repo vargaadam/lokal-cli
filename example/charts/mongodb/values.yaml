@@ -1,2 +1,2 @@
 mongodb:
-  architecture: "replicaset"
+  architecture: "standalone"

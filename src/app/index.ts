@@ -62,7 +62,11 @@ export class App extends Yaml<AppOptions> {
     const configMapOptions = this.options.manifests.configMap;
     if (configMapOptions) {
       const fromFile = configMapOptions.fromFile
-        ? path.join(this.workingDir, this.appName, configMapOptions.fromFile)
+        ? path.join(
+            this.workingDir,
+            this.workspaceAppOptions.repository.localPath,
+            configMapOptions.fromFile
+          )
         : undefined;
 
       configMap = manifestContainer.addConfigMap({
@@ -88,7 +92,10 @@ export class App extends Yaml<AppOptions> {
   initSkaffold(namespace: string, skaffold: Skaffold) {
     const buildOptions = this.options.build;
     if (buildOptions) {
-      const context = path.join(this.workingDir, this.appName);
+      const context = path.join(
+        this.workingDir,
+        this.workspaceAppOptions.repository.localPath
+      );
       skaffold.addArtifact({
         docker: { dockerfile: buildOptions.docker.dockerfile },
         sync: buildOptions.sync,

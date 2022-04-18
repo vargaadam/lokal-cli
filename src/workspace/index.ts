@@ -2,7 +2,7 @@ import child_process from "child_process";
 import path, { join } from "path";
 import * as k from "cdk8s";
 import { App } from "../app";
-import { Repository, RepositoryOptions } from "./repository";
+import { Repository } from "./repository";
 import { Yaml } from "../content/base/yaml";
 import { ManifestContainer } from "../app/manifests";
 import { Skaffold } from "../content/skaffold";
@@ -11,7 +11,10 @@ import { HelmRelease, HelmReleaseOptions } from "./helm";
 export interface WorkspaceAppOptions {
   name: string;
   lokalFile?: string;
-  repository?: RepositoryOptions;
+  repository: {
+    localPath: string;
+    repoUrl?: string;
+  };
   portForward?: number;
 }
 
@@ -43,18 +46,16 @@ export class Workspace extends Yaml<WorkspaceOptions> {
 
   async cloneApps(isPull: boolean) {
     for (const workspaceAppOptions of this.options.apps || []) {
-      if (workspaceAppOptions.repository) {
-        const repository = new Repository(
-          this.workingDir,
-          workspaceAppOptions.name,
-          workspaceAppOptions.repository
-        );
+      const repositoryOptions = workspaceAppOptions.repository;
+      const repoDir = path.join(this.workingDir, repositoryOptions.localPath);
+      const repository = new Repository(repoDir);
 
-        await repository.clone();
+      if (repositoryOptions.repoUrl) {
+        await repository.clone(repositoryOptions.repoUrl);
+      }
 
-        if (isPull) {
-          await repository.pull();
-        }
+      if (isPull) {
+        await repository.pull();
       }
     }
   }
@@ -65,7 +66,7 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     for (const workspaceAppOptions of this.options.apps || []) {
       const appConfigFilePath = path.join(
         this.workingDir,
-        workspaceAppOptions.name,
+        workspaceAppOptions.repository.localPath,
         workspaceAppOptions.lokalFile || ".lokal"
       );
 
