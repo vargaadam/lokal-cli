@@ -21,7 +21,7 @@ $ npm install -g lokal-cli
 $ lkl COMMAND
 running command...
 $ lkl (--version)
-lokal-cli/0.1.0 darwin-arm64 node-v16.14.0
+lokal-cli/0.2.0 darwin-arm64 node-v16.14.0
 $ lkl --help [COMMAND]
 USAGE
   $ lkl COMMAND
@@ -105,7 +105,7 @@ EXAMPLES
   $ lkl clone WORKING_DIR
 ```
 
-_See code: [dist/commands/clone/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/clone/index.ts)_
+_See code: [dist/commands/clone/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.2.0/dist/commands/clone/index.ts)_
 
 ## `lkl delete WORKINGDIR`
 
@@ -121,7 +121,7 @@ EXAMPLES
   $ lkl delete WORKING_DIR
 ```
 
-_See code: [dist/commands/delete/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/delete/index.ts)_
+_See code: [dist/commands/delete/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.2.0/dist/commands/delete/index.ts)_
 
 ## `lkl dev WORKINGDIR`
 
@@ -137,7 +137,7 @@ EXAMPLES
   $ lkl dev WORKING_DIR
 ```
 
-_See code: [dist/commands/dev/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/dev/index.ts)_
+_See code: [dist/commands/dev/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.2.0/dist/commands/dev/index.ts)_
 
 ## `lkl generate WORKINGDIR`
 
@@ -153,7 +153,7 @@ EXAMPLES
   $ lkl generate WORKING_DIR
 ```
 
-_See code: [dist/commands/generate/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.1.0/dist/commands/generate/index.ts)_
+_See code: [dist/commands/generate/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.2.0/dist/commands/generate/index.ts)_
 
 ## `lkl help [COMMAND]`
 
