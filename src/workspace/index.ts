@@ -11,6 +11,7 @@ import { HelmRelease, HelmReleaseOptions } from "./helm";
 export interface WorkspaceAppOptions {
   name: string;
   lokalFile?: string;
+  env?: Record<string, string>;
   repository: {
     localPath: string;
     repoUrl?: string;

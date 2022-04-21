@@ -71,7 +71,10 @@ export class App extends Yaml<AppOptions> {
 
       configMap = manifestContainer.addConfigMap({
         appName: this.appName,
-        env: configMapOptions.env,
+        env: {
+          ...configMapOptions.env,
+          ...this.workspaceAppOptions.env,
+        },
         fromFile,
       });
     }

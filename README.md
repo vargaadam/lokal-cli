@@ -43,15 +43,17 @@ helmReleases:
     repo: https://charts.bitnami.com/bitnami
     remoteChart: redis
     version: 16.8.5
-    valuesFiles: # optional
+    valuesFiles: # (optional)
       - ./charts/redis/values.yaml
 apps:
   - name: service1
-    lokalFile: ".lokal" # optional default: .lokal
+    lokalFile: ".lokal" # (optional) default: .lokal
+    env: # (optional) append or override the App env config
+      FOO: "workspaceFoo"
     repository:
       localPath: "./apps/service1"
-      repoUrl: "git@github.com:vargaadam/example-service.git" # optional
-      branch: "dev" # optional
+      repoUrl: "git@github.com:vargaadam/example-service.git" # (optional)
+      branch: "dev" # (optional)
     portForward: 3000
 
 ```
@@ -63,13 +65,13 @@ version: lokal/v1alpha1
 kind: App
 name: service1
 manifests:
-  configMap: # optional
+  configMap: # (optional)
     fromFile: .env.example
     env:
       FOO: FOO
   deployment:
-    replicas: 1 # optional default: 1
-    size: NO_LIMIT | SMALL | MEDIUM | LARGE # optional default: NO_LIMIT
+    replicas: 1 # (optional) default: 1
+    size: NO_LIMIT | SMALL | MEDIUM | LARGE # (optional) default: NO_LIMIT
     port: 3000
 build:
   docker:
@@ -81,11 +83,11 @@ build:
 ```
 # Commands
 <!-- commands -->
-* [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
-* [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
-* [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
-* [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
-* [`lkl help [COMMAND]`](#lkl-help-command)
+  * [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
+  * [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
+  * [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
+  * [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
+  * [`lkl help [COMMAND]`](#lkl-help-command)
 
 ## `lkl clone WORKINGDIR`
 
