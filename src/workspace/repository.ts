@@ -25,6 +25,8 @@ export class Repository {
       return;
     }
 
+    console.log(`Cloning ${this.name}`);
+
     await this.git.clone(repoUrl, this.localPath);
   }
 
@@ -34,6 +36,8 @@ export class Repository {
     if (!isGitRepo) {
       return;
     }
+
+    console.log(`Checking out ${this.name} ${branchName} branch`);
 
     const branch = await this.git.branchLocal();
 
@@ -58,6 +62,8 @@ export class Repository {
     if (!isGitRepo) {
       return;
     }
+
+    console.log(`Pulling ${this.name}`);
 
     await this.git.pull();
   }
