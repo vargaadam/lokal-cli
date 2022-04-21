@@ -34,7 +34,7 @@ USAGE
 ```yaml
 version: lokal/v1alpha1
 kind: Workspace
-name: foo
+name: foo 
 namespace: foo
 helmReleases:
   - name: mongodb
@@ -43,20 +43,16 @@ helmReleases:
     repo: https://charts.bitnami.com/bitnami
     remoteChart: redis
     version: 16.8.5
-    valuesFiles:
+    valuesFiles: # optional
       - ./charts/redis/values.yaml
 apps:
   - name: service1
-    lokalFile: ".lokal"
+    lokalFile: ".lokal" # optional default: .lokal
     repository:
       localPath: "./apps/service1"
-      repoUrl: "git@github.com:vargaadam/example-service.git"
+      repoUrl: "git@github.com:vargaadam/example-service.git" # optional
+      branch: "dev" # optional
     portForward: 3000
-  - name: service2
-    repository:
-      localPath: "./apps/service1"
-      repoUrl: "git@github.com:vargaadam/example-service.git"
-    portForward: 3001
 
 ```
 
@@ -67,13 +63,13 @@ version: lokal/v1alpha1
 kind: App
 name: service1
 manifests:
-  configMap:
+  configMap: # optional
     fromFile: .env.example
     env:
       FOO: FOO
   deployment:
-    replicas: 1
-    size: NO_LIMIT | SMALL | MEDIUM | LARGE
+    replicas: 1 # optional default: 1
+    size: NO_LIMIT | SMALL | MEDIUM | LARGE # optional default: NO_LIMIT
     port: 3000
 build:
   docker:
@@ -85,12 +81,6 @@ build:
 ```
 # Commands
 <!-- commands -->
-- [loKal](#lokal)
-- [Requirements](#requirements)
-- [Usage](#usage)
-- [Workspace Config](#workspace-config)
-- [App config](#app-config)
-- [Commands](#commands)
   - [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
   - [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
   - [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
