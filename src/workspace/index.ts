@@ -14,6 +14,7 @@ export interface WorkspaceAppOptions {
   repository: {
     localPath: string;
     repoUrl?: string;
+    branch?: string;
   };
   portForward?: number;
 }
@@ -48,10 +49,14 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     for (const workspaceAppOptions of this.options.apps || []) {
       const repositoryOptions = workspaceAppOptions.repository;
       const repoDir = path.join(this.workingDir, repositoryOptions.localPath);
-      const repository = new Repository(repoDir);
+      const repository = new Repository(repoDir, workspaceAppOptions.name);
 
       if (repositoryOptions.repoUrl) {
         await repository.clone(repositoryOptions.repoUrl);
+      }
+
+      if (repositoryOptions.branch) {
+        await repository.checkoutBranch(repositoryOptions.branch);
       }
 
       if (isPull) {
