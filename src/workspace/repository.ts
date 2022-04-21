@@ -41,21 +41,21 @@ export class Repository {
 
     const branch = await this.git.branchLocal();
 
-    if (!branch.all.includes(branchName)) {
-      try {
-        const originBranchName = path.join("origin", branchName);
-
-        await this.git.checkoutBranch(branchName, originBranchName);
-      } catch (error) {
-        if (error instanceof GitError) {
-          console.log(
-            `An Error occurred when checking out ${this.name} service branch: ${error.message}`
-          );
-          return;
-        }
-
-        throw error;
+    try {
+      if (!branch.all.includes(branchName)) {
+        await this.git.checkoutLocalBranch(branchName);
+      } else {
+        await this.git.checkout(branchName);
       }
+    } catch (error) {
+      if (error instanceof GitError) {
+        console.log(
+          `An Error occurred when checking out ${this.name} service branch: ${error.message}`
+        );
+        return;
+      }
+
+      throw error;
     }
   }
 
