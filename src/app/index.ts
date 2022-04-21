@@ -8,7 +8,7 @@ import { WorkspaceAppOptions } from "../workspace";
 export interface AppBuildOptions {
   image: string;
   context: string;
-  docker: { dockerfile: string };
+  docker: { dockerfile: string; buildArgs?: Record<string, string> };
   sync: {
     manual: Array<{
       src: string;
@@ -100,7 +100,7 @@ export class App extends Yaml<AppOptions> {
         this.workspaceAppOptions.repository.localPath
       );
       skaffold.addArtifact({
-        docker: { dockerfile: buildOptions.docker.dockerfile },
+        docker: { ...buildOptions.docker },
         sync: buildOptions.sync,
         context,
         image: this.appName,

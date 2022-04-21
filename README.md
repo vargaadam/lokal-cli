@@ -76,6 +76,8 @@ manifests:
 build:
   docker:
     dockerfile: Dockerfile
+  buildArgs: # (optional)
+    BUILD_ARG: build_arg
   sync:
     manual:
       - src: "src/**/*.js"

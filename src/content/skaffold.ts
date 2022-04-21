@@ -8,7 +8,7 @@ export interface SkaffoldBuildSyncOptions {
 export interface SkaffoldBuildArtifactsOptions {
   image: string;
   context: string;
-  docker: { dockerfile: string };
+  docker: { dockerfile: string; buildArgs?: Record<string, string> };
   sync: {
     manual: SkaffoldBuildSyncOptions[];
   };
