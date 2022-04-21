@@ -51,7 +51,10 @@ export class Repository {
           console.log(
             `An Error occurred when checking out ${this.name} service branch: ${error.message}`
           );
+          return;
         }
+
+        throw error;
       }
     }
   }
@@ -65,6 +68,17 @@ export class Repository {
 
     console.log(`Pulling ${this.name}`);
 
-    await this.git.pull();
+    try {
+      await this.git.pull();
+    } catch (error) {
+      if (error instanceof GitError) {
+        console.log(
+          `An Error occurred when pulling ${this.name}: ${error.message}`
+        );
+        return;
+      }
+
+      throw error;
+    }
   }
 }
