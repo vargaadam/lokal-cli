@@ -60,8 +60,9 @@ export class App extends Yaml<AppOptions> {
 
     let configMap;
     const configMapOptions = this.options.manifests.configMap;
-    if (configMapOptions) {
-      const fromFile = configMapOptions.fromFile
+    const workspaceEnv = this.workspaceAppOptions.env;
+    if (workspaceEnv || configMapOptions) {
+      const fromFile = configMapOptions?.fromFile
         ? path.join(
             this.workingDir,
             this.workspaceAppOptions.repository.localPath,
@@ -72,8 +73,8 @@ export class App extends Yaml<AppOptions> {
       configMap = manifestContainer.addConfigMap({
         appName: this.appName,
         env: {
-          ...configMapOptions.env,
-          ...this.workspaceAppOptions.env,
+          ...configMapOptions?.env,
+          ...workspaceEnv,
         },
         fromFile,
       });
