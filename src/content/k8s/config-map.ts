@@ -5,7 +5,7 @@ import * as kplus from "cdk8s-plus-22";
 import { BaseK8s } from "./base";
 
 export interface ConfigMapOptions {
-  appName: string;
+  name: string;
   fromFile?: string;
   env?: Record<string, string>;
 }
@@ -18,7 +18,7 @@ export class ConfigMap extends BaseK8s<ConfigMapOptions> {
   create(options: ConfigMapOptions) {
     const configMap = new kplus.ConfigMap(
       this.chart,
-      options.appName.concat("-cm"),
+      options.name.concat("-cm"),
       {
         immutable: true,
       }

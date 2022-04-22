@@ -9,7 +9,7 @@ export enum DeploymentSize {
   NO_LIMIT = "NO_LIMIT",
 }
 export interface DeploymentOptions {
-  appName: string;
+  name: string;
   image: string;
   port: number;
   replicas?: number;
@@ -25,7 +25,7 @@ export class Deployment extends BaseK8s<DeploymentOptions> {
   create(options: DeploymentOptions) {
     const deployment = new kplus.Deployment(
       this.chart,
-      options.appName.concat("-dp"),
+      options.name.concat("-dp"),
       {
         replicas: options.replicas || 1,
         containers: [
@@ -40,7 +40,7 @@ export class Deployment extends BaseK8s<DeploymentOptions> {
     );
 
     deployment.exposeViaService({
-      name: options.appName,
+      name: options.name,
       port: options.port,
     });
 

@@ -71,7 +71,7 @@ export class App extends Yaml<AppOptions> {
         : undefined;
 
       configMap = manifestContainer.addConfigMap({
-        appName: this.appName,
+        name: this.appName,
         env: {
           ...configMapOptions?.env,
           ...workspaceEnv,
@@ -83,7 +83,7 @@ export class App extends Yaml<AppOptions> {
     const deploymentOptions = this.options.manifests.deployment;
     if (deploymentOptions) {
       manifestContainer.addDeployment({
-        appName: this.appName,
+        name: this.appName,
         image: this.appName,
         port: deploymentOptions.port,
         replicas: deploymentOptions.replicas,
