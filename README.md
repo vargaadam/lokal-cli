@@ -85,11 +85,11 @@ build:
 ```
 # Commands
 <!-- commands -->
-  * [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
-  * [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
-  * [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
-  * [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
-  * [`lkl help [COMMAND]`](#lkl-help-command)
+* [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
+* [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
+* [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
+* [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
+* [`lkl help [COMMAND]`](#lkl-help-command)
 
 ## `lkl clone WORKINGDIR`
 
@@ -128,11 +128,12 @@ _See code: [dist/commands/delete/index.ts](https://github.com/vargaadam/lokal-cl
 
 ```
 USAGE
-  $ lkl dev [WORKINGDIR] [-c <value>] [-o <value>]
+  $ lkl dev [WORKINGDIR] [-c <value>] [-o <value>] [--skip-generate]
 
 FLAGS
   -c, --configFile=<value>  [default: .lokal] The lokal config file name
   -o, --outDir=<value>      [default: .lokal] The generated manifests directory
+  --skip-generate
 
 EXAMPLES
   $ lkl dev WORKING_DIR
