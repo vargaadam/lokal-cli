@@ -17,7 +17,7 @@ export interface DeploymentOptions {
   configMap?: kplus.ConfigMap;
 }
 
-export class Deployment extends BaseK8s<DeploymentOptions> {
+export class Deployment extends BaseK8s<kplus.Deployment, DeploymentOptions> {
   constructor(chart: k.Chart) {
     super(chart);
   }
@@ -38,11 +38,6 @@ export class Deployment extends BaseK8s<DeploymentOptions> {
         ],
       }
     );
-
-    deployment.exposeViaService({
-      name: options.name,
-      port: options.port,
-    });
 
     if (options.configMap) {
       const kubeDeployment = k.ApiObject.of(deployment);

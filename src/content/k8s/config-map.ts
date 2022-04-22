@@ -10,7 +10,7 @@ export interface ConfigMapOptions {
   env?: Record<string, string>;
 }
 
-export class ConfigMap extends BaseK8s<ConfigMapOptions> {
+export class ConfigMap extends BaseK8s<kplus.ConfigMap, ConfigMapOptions> {
   constructor(chart: k.Chart) {
     super(chart);
   }

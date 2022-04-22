@@ -80,15 +80,21 @@ export class App extends Yaml<AppOptions> {
       });
     }
 
+    let service;
     const deploymentOptions = this.options.manifests.deployment;
     if (deploymentOptions) {
-      manifestContainer.addDeployment({
+      const dp = manifestContainer.addDeployment({
         name: this.appName,
         image: this.appName,
         port: deploymentOptions.port,
         replicas: deploymentOptions.replicas,
         size: deploymentOptions.size,
         configMap: configMap,
+      });
+
+      service = manifestContainer.addService({
+        name: this.appName,
+        deployment: dp,
       });
     }
   }

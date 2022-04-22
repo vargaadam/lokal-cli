@@ -98,7 +98,7 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     });
 
     const manifestContainer = new ManifestContainer(this.options.name, chart);
-    manifestContainer.addNamespace(this.options.namespace);
+    manifestContainer.addNamespace({ name: this.options.namespace });
 
     for (const helmReleaseOptions of this.options.helmReleases || []) {
       let chartPath = helmReleaseOptions.chartPath
