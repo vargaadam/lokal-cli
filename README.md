@@ -99,10 +99,10 @@ build:
 <!-- commands -->
 * [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
 * [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
+* [`lkl deploy WORKINGDIR`](#lkl-deploy-workingdir)
 * [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
 * [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
 * [`lkl help [COMMAND]`](#lkl-help-command)
-* [`lkl run WORKINGDIR`](#lkl-run-workingdir)
 
 ## `lkl clone WORKINGDIR`
 
@@ -136,6 +136,23 @@ EXAMPLES
 ```
 
 _See code: [dist/commands/delete/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.3.0/dist/commands/delete/index.ts)_
+
+## `lkl deploy WORKINGDIR`
+
+```
+USAGE
+  $ lkl deploy [WORKINGDIR] [-w <value>] [-o <value>] [--skip-generate]
+
+FLAGS
+  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
+  -w, --workspace=<value>  [default: .lokal] The workspace config file name
+  --skip-generate
+
+EXAMPLES
+  $ lkl deploy WORKING_DIR
+```
+
+_See code: [dist/commands/deploy/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.3.0/dist/commands/deploy/index.ts)_
 
 ## `lkl dev WORKINGDIR`
 
@@ -189,21 +206,4 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
-
-## `lkl run WORKINGDIR`
-
-```
-USAGE
-  $ lkl run [WORKINGDIR] [-w <value>] [-o <value>] [--skip-generate]
-
-FLAGS
-  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
-  -w, --workspace=<value>  [default: .lokal] The workspace config file name
-  --skip-generate
-
-EXAMPLES
-  $ lkl dev WORKING_DIR
-```
-
-_See code: [dist/commands/run/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.3.0/dist/commands/run/index.ts)_
 <!-- commandsstop -->

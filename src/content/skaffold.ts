@@ -3,7 +3,7 @@ import { Yaml } from "./base/yaml";
 export enum SKAFFOLD_COMMANDS {
   DEV = "dev",
   DELETE = "delete",
-  RUN = "run",
+  DEPLOY = "deploy",
 }
 
 export interface SkaffoldBuildSyncOptions {

@@ -136,8 +136,15 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     }
   }
 
-  runSkaffold(command: SKAFFOLD_COMMANDS) {
-    child_process.execSync(`skaffold ${command} -f ${this.skaffold.filePath}`, {
+  runSkaffold(command: SKAFFOLD_COMMANDS, ...args: string[]) {
+    const defaultCommand = `skaffold ${command} -f ${this.skaffold.filePath}`;
+    let defaultArgs = "";
+
+    for (const arg of args) {
+      defaultArgs = defaultArgs.concat(" ", arg);
+    }
+
+    child_process.execSync(defaultCommand.concat(defaultArgs), {
       stdio: "inherit",
     });
   }
