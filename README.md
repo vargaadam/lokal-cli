@@ -37,16 +37,24 @@ kind: Workspace
 name: foo 
 namespace: foo
 helmReleases:
-  - name: mongodb
-    chartPath: ./charts/mongodb
-  - name: redis
-    repo: https://charts.bitnami.com/bitnami
-    remoteChart: redis
-    version: 16.8.5
-    valuesFiles: # (optional)
-      - ./charts/redis/values.yaml
+  - groups: # optional
+      - resource
+    releaseOptions:
+      name: mongodb
+      chartPath: ./charts/mongodb
+  - groups: 
+      - resource
+    releaseOptions: 
+      name: redis
+      repo: https://charts.bitnami.com/bitnami
+      remoteChart: redis
+      version: 16.8.5
+      valuesFiles: # (optional)
+        - ./charts/redis/values.yaml
 apps:
   - name: service1
+    groups: # optional
+      - test
     lokalFile: ".lokal" # (optional) default: .lokal
     env: # (optional) append or override the App env config
       FOO: "workspaceFoo"
@@ -85,12 +93,18 @@ build:
 ```
 # Commands
 <!-- commands -->
-* [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
-* [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
-* [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
-* [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
-* [`lkl help [COMMAND]`](#lkl-help-command)
-* [`lkl run WORKINGDIR`](#lkl-run-workingdir)
+- [loKal](#lokal)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Workspace Config](#workspace-config)
+- [App config](#app-config)
+- [Commands](#commands)
+  - [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
+  - [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
+  - [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
+  - [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
+  - [`lkl help [COMMAND]`](#lkl-help-command)
+  - [`lkl run WORKINGDIR`](#lkl-run-workingdir)
 
 ## `lkl clone WORKINGDIR`
 

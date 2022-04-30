@@ -7,33 +7,29 @@ import { Service, ServiceOptions } from "../content/k8s/service";
 export class ManifestContainer {
   name: string;
   chart: k.Chart;
-  namespace: Namespace;
-  deployment: Deployment;
-  configMap: ConfigMap;
-  service: Service;
 
   constructor(name: string, chart: k.Chart) {
     this.name = name;
     this.chart = chart;
-    this.namespace = new Namespace(this.chart);
-    this.deployment = new Deployment(this.chart);
-    this.service = new Service(this.chart);
-    this.configMap = new ConfigMap(this.chart);
   }
 
   addNamespace(options: NamespaceOptions) {
-    return this.namespace.create(options);
+    const namespace = new Namespace(this.chart);
+    return namespace.create(options);
   }
 
   addDeployment(options: DeploymentOptions) {
-    return this.deployment.create(options);
+    const deployment = new Deployment(this.chart);
+    return deployment.create(options);
   }
 
   addService(options: ServiceOptions) {
-    return this.service.create(options);
+    const service = new Service(this.chart);
+    return service.create(options);
   }
 
   addConfigMap(options: ConfigMapOptions) {
-    return this.configMap.create(options);
+    const configMap = new ConfigMap(this.chart);
+    return configMap.create(options);
   }
 }
