@@ -4,6 +4,7 @@ import { Skaffold } from "../content/skaffold";
 import { Yaml } from "../content/base/yaml";
 import { DeploymentSize } from "../content/k8s/deployment";
 import { WorkspaceAppOptions } from "../workspace/app";
+import { WorkspacePortForwardOptions } from "../workspace";
 
 export interface AppBuildOptions {
   image: string;
@@ -103,7 +104,10 @@ export class App extends Yaml<AppOptions> {
     }
   }
 
-  initSkaffold(skaffold: Skaffold, portForward?: number) {
+  initSkaffold(
+    skaffold: Skaffold,
+    portForwardOptions?: WorkspacePortForwardOptions[]
+  ) {
     const buildOptions = this.options.build;
     if (buildOptions) {
       const context = path.join(
@@ -119,13 +123,15 @@ export class App extends Yaml<AppOptions> {
     }
 
     const deploymentOptions = this.options.manifests?.deployment;
-    if (deploymentOptions && portForward) {
-      skaffold.addPortForward({
-        resourceName: this.appName,
-        port: deploymentOptions.port,
-        localPort: portForward,
-        namespace: this.namespace,
-      });
+    if (deploymentOptions && portForwardOptions) {
+      for (const portForward of portForwardOptions) {
+        skaffold.addPortForward({
+          resourceName: portForward.resourceName || this.appName,
+          port: portForward.port || deploymentOptions.port,
+          localPort: portForward.localPort,
+          namespace: this.namespace,
+        });
+      }
     }
   }
 }

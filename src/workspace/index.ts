@@ -7,10 +7,17 @@ import { Skaffold, SKAFFOLD_COMMANDS } from "../content/skaffold";
 import { HelmRelease, HelmReleaseOptions } from "./helm";
 import { WorkspaceApp, WorkspaceAppOptions } from "./app";
 
-interface CommonWorkspaceOptions<T> {
+export interface WorkspacePortForwardOptions {
+  localPort: number;
+  port?: number;
+  resourceType?: string;
+  resourceName?: string;
+}
+
+export interface CommonWorkspaceOptions<T> {
   name: string;
   groups?: string[];
-  portForward: number;
+  portForward?: WorkspacePortForwardOptions[];
   spec: T;
 }
 

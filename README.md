@@ -52,10 +52,13 @@ helmReleases:
       valuesFiles: # (optional)
         - ./charts/redis/values.yaml
 apps:
-  - name: service1
+  - name: app1
     groups: # optional
       - test
-    portForward: 3000 # optional
+    portForward: # optional
+      - localPort: 3000 
+        resourceType: Service # optional
+        resourceName: app1 # optional
     lokalFile: ".lokal" # (optional) default: .lokal
     spec:
       env: # (optional) append or override the App env config
