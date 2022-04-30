@@ -37,15 +37,15 @@ kind: Workspace
 name: foo 
 namespace: foo
 helmReleases:
-  - groups: # optional
+  - name: mongodb
+    groups: # optional
       - resource
-    releaseOptions:
-      name: mongodb
+    spec:
       chartPath: ./charts/mongodb
-  - groups: 
+  - name: redis
+    groups: # optional
       - resource
-    releaseOptions: 
-      name: redis
+    spec: 
       repo: https://charts.bitnami.com/bitnami
       remoteChart: redis
       version: 16.8.5
@@ -55,14 +55,15 @@ apps:
   - name: service1
     groups: # optional
       - test
+    portForward: 3000 # optional
     lokalFile: ".lokal" # (optional) default: .lokal
-    env: # (optional) append or override the App env config
-      FOO: "workspaceFoo"
-    repository:
-      localPath: "./apps/service1"
-      repoUrl: "git@github.com:vargaadam/example-service.git" # (optional)
-      branch: "dev" # (optional)
-    portForward: 3000
+    spec:
+      env: # (optional) append or override the App env config
+        FOO: "workspaceFoo"
+      repository:
+        localPath: "./apps/service1"
+        repoUrl: "git@github.com:vargaadam/example-service.git" # (optional)
+        branch: "dev" # (optional)
 
 ```
 

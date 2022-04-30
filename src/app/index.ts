@@ -3,7 +3,7 @@ import { ManifestContainer } from "./manifests";
 import { Skaffold } from "../content/skaffold";
 import { Yaml } from "../content/base/yaml";
 import { DeploymentSize } from "../content/k8s/deployment";
-import { WorkspaceAppOptions } from "../workspace";
+import { WorkspaceAppOptions } from "../workspace/app";
 
 export interface AppBuildOptions {
   image: string;
@@ -36,20 +36,24 @@ export interface AppOptions {
 }
 
 export class App extends Yaml<AppOptions> {
-  workingDir: string;
   appName: string;
+  namespace: string;
+  workingDir: string;
   options: AppOptions;
   workspaceAppOptions: WorkspaceAppOptions;
 
   constructor(
+    name: string,
+    namespace: string,
     workingDir: string,
     appConfigFilePath: string,
     workspaceAppOptions: WorkspaceAppOptions
   ) {
     super(appConfigFilePath);
     this.options = this.load();
+    this.appName = name || this.options.name;
+    this.namespace = namespace;
     this.workingDir = workingDir;
-    this.appName = workspaceAppOptions.name || this.options.name;
     this.workspaceAppOptions = workspaceAppOptions;
   }
 
@@ -99,7 +103,7 @@ export class App extends Yaml<AppOptions> {
     }
   }
 
-  initSkaffold(namespace: string, skaffold: Skaffold) {
+  initSkaffold(skaffold: Skaffold, portForward?: number) {
     const buildOptions = this.options.build;
     if (buildOptions) {
       const context = path.join(
@@ -115,12 +119,12 @@ export class App extends Yaml<AppOptions> {
     }
 
     const deploymentOptions = this.options.manifests?.deployment;
-    if (deploymentOptions && this.workspaceAppOptions.portForward) {
+    if (deploymentOptions && portForward) {
       skaffold.addPortForward({
         resourceName: this.appName,
         port: deploymentOptions.port,
-        localPort: this.workspaceAppOptions.portForward,
-        namespace,
+        localPort: portForward,
+        namespace: this.namespace,
       });
     }
   }

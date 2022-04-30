@@ -7,13 +7,27 @@ import { Skaffold, SKAFFOLD_COMMANDS } from "../content/skaffold";
 import { HelmRelease, HelmReleaseOptions } from "./helm";
 import { WorkspaceApp, WorkspaceAppOptions } from "./app";
 
+interface CommonWorkspaceOptions<T> {
+  name: string;
+  groups?: string[];
+  spec: T;
+}
+
+export interface WorkspaceHelmReleasesOptions
+  extends CommonWorkspaceOptions<HelmReleaseOptions> {}
+
+export interface WorkspaceAppsOptions
+  extends CommonWorkspaceOptions<WorkspaceAppOptions> {
+  lokalFile?: string;
+}
+
 export interface WorkspaceOptions {
   version: string;
   kind: string;
   name: string;
   namespace: string;
-  apps?: WorkspaceAppOptions[];
-  helmReleases?: HelmReleaseOptions[];
+  apps?: WorkspaceAppsOptions[];
+  helmReleases?: WorkspaceHelmReleasesOptions[];
 }
 
 export class Workspace extends Yaml<WorkspaceOptions> {
@@ -34,10 +48,14 @@ export class Workspace extends Yaml<WorkspaceOptions> {
   }
 
   async cloneApps(isPull: boolean) {
-    for (const workspaceAppOptions of this.options.apps || []) {
+    for (const { name, lokalFile, spec: workspaceAppOptions } of this.options
+      .apps || []) {
       const workspaceApp = new WorkspaceApp(
+        name,
+        this.options.namespace,
         this.workingDir,
-        workspaceAppOptions
+        workspaceAppOptions,
+        lokalFile
       );
       await workspaceApp.cloneApp(isPull);
     }
@@ -54,7 +72,8 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     const manifestContainer = new ManifestContainer(this.options.name, chart);
     manifestContainer.addNamespace({ name: this.options.namespace });
 
-    for (const helmReleaseOptions of this.options.helmReleases || []) {
+    for (const { name, spec: helmReleaseOptions } of this.options
+      .helmReleases || []) {
       let chartPath = helmReleaseOptions.chartPath
         ? join(this.workingDir, helmReleaseOptions.chartPath)
         : undefined;
@@ -63,7 +82,7 @@ export class Workspace extends Yaml<WorkspaceOptions> {
         path.join(this.workingDir, valuesFile)
       );
 
-      const helmRelease = new HelmRelease(this.options.namespace, {
+      const helmRelease = new HelmRelease(name, this.options.namespace, {
         ...helmReleaseOptions,
         chartPath,
         valuesFiles,
@@ -72,15 +91,19 @@ export class Workspace extends Yaml<WorkspaceOptions> {
       helmRelease.initSkaffold(this.skaffold);
     }
 
-    for (const workspaceAppOptions of this.options.apps || []) {
+    for (const { name, lokalFile, spec: workspaceAppOptions } of this.options
+      .apps || []) {
       const workspaceApp = new WorkspaceApp(
+        name,
+        this.options.namespace,
         this.workingDir,
-        workspaceAppOptions
+        workspaceAppOptions,
+        lokalFile
       );
 
-      const app = await workspaceApp.initApp();
+      const app = workspaceApp.initApp();
       app.initManifests(manifestContainer);
-      app.initSkaffold(this.options.namespace, this.skaffold);
+      app.initSkaffold(this.skaffold);
     }
 
     const appManifestFile = path.join(

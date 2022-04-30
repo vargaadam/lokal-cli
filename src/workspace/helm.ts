@@ -1,7 +1,6 @@
 import { Skaffold } from "../content/skaffold";
 
 export interface HelmReleaseOptions {
-  name: string;
   namespace?: string;
   createNamespace?: boolean;
   repo?: string;
@@ -11,15 +10,20 @@ export interface HelmReleaseOptions {
 }
 
 export class HelmRelease {
-  options: HelmReleaseOptions;
+  name: string;
   namespace: string;
+  options: HelmReleaseOptions;
 
-  constructor(namespace: string, options: HelmReleaseOptions) {
-    this.options = options;
+  constructor(name: string, namespace: string, options: HelmReleaseOptions) {
+    this.name = name;
     this.namespace = namespace;
+    this.options = options;
   }
 
   initSkaffold(skaffold: Skaffold) {
-    skaffold.addHelmRelease(this.namespace, this.options);
+    skaffold.addHelmRelease(this.namespace, {
+      ...this.options,
+      name: this.name,
+    });
   }
 }
