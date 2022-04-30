@@ -1,3 +1,4 @@
+import { WorkspacePortForwardOptions } from ".";
 import { Skaffold } from "../content/skaffold";
 
 export interface HelmReleaseOptions {
@@ -20,10 +21,29 @@ export class HelmRelease {
     this.options = options;
   }
 
-  initSkaffold(skaffold: Skaffold) {
+  initSkaffold(
+    skaffold: Skaffold,
+    portForwardOptions?: WorkspacePortForwardOptions[]
+  ) {
     skaffold.addHelmRelease(this.namespace, {
       ...this.options,
       name: this.name,
     });
+
+    for (const portForward of portForwardOptions || []) {
+      if (!portForward.port) {
+        throw new Error(
+          "If you want to portForward a helm release, you must specify at least the port and the localPort param!"
+        );
+      }
+
+      skaffold.addPortForward({
+        resourceName: portForward.resourceName || this.name,
+        resourceType: portForward.resourceType || "Service",
+        port: portForward.port,
+        localPort: portForward.localPort,
+        namespace: this.namespace,
+      });
+    }
   }
 }

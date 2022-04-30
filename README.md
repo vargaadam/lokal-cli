@@ -38,8 +38,13 @@ name: foo
 namespace: foo
 helmReleases:
   - name: mongodb
-    groups: # optional
+    groups: # (optional)
       - resource
+    portForward: # (optional)
+      - localPort: 3000
+        port: 3000 
+        resourceType: Service # (optional) default: Service
+        resourceName: mongodb # (optional) default: name
     spec:
       chartPath: ./charts/mongodb
   - name: redis
@@ -53,12 +58,13 @@ helmReleases:
         - ./charts/redis/values.yaml
 apps:
   - name: app1
-    groups: # optional
+    groups: # (optional)
       - test
-    portForward: # optional
-      - localPort: 3000 
-        resourceType: Service # optional
-        resourceName: app1 # optional
+    portForward: # (optional)
+      - localPort: 3000
+        port: 3000 # (optional) # default: app.deployment.port
+        resourceType: Service # (optional) default: Service
+        resourceName: app1 # (optional) default: name
     lokalFile: ".lokal" # (optional) default: .lokal
     spec:
       env: # (optional) append or override the App env config

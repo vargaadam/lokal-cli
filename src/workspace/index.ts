@@ -80,42 +80,40 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     const manifestContainer = new ManifestContainer(this.options.name, chart);
     manifestContainer.addNamespace({ name: this.options.namespace });
 
-    for (const { name, spec: helmReleaseOptions } of this.options
-      .helmReleases || []) {
-      let chartPath = helmReleaseOptions.chartPath
-        ? join(this.workingDir, helmReleaseOptions.chartPath)
+    for (const helmReleasesOptions of this.options.helmReleases || []) {
+      let chartPath = helmReleasesOptions.spec.chartPath
+        ? join(this.workingDir, helmReleasesOptions.spec.chartPath)
         : undefined;
 
-      const valuesFiles = helmReleaseOptions.valuesFiles?.map((valuesFile) =>
-        path.join(this.workingDir, valuesFile)
+      const valuesFiles = helmReleasesOptions.spec.valuesFiles?.map(
+        (valuesFile) => path.join(this.workingDir, valuesFile)
       );
 
-      const helmRelease = new HelmRelease(name, this.options.namespace, {
-        ...helmReleaseOptions,
-        chartPath,
-        valuesFiles,
-      });
+      const helmRelease = new HelmRelease(
+        helmReleasesOptions.name,
+        this.options.namespace,
+        {
+          ...helmReleasesOptions.spec,
+          chartPath,
+          valuesFiles,
+        }
+      );
 
-      helmRelease.initSkaffold(this.skaffold);
+      helmRelease.initSkaffold(this.skaffold, helmReleasesOptions.portForward);
     }
 
-    for (const {
-      name,
-      lokalFile,
-      spec: workspaceAppOptions,
-      portForward,
-    } of this.options.apps || []) {
+    for (const workspaceAppsOptions of this.options.apps || []) {
       const workspaceApp = new WorkspaceApp(
-        name,
+        workspaceAppsOptions.name,
         this.options.namespace,
         this.workingDir,
-        workspaceAppOptions,
-        lokalFile
+        workspaceAppsOptions.spec,
+        workspaceAppsOptions.lokalFile
       );
 
       const app = workspaceApp.initApp();
       app.initManifests(manifestContainer);
-      app.initSkaffold(this.skaffold, portForward);
+      app.initSkaffold(this.skaffold, workspaceAppsOptions.portForward);
     }
 
     const appManifestFile = path.join(

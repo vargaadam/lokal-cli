@@ -127,6 +127,7 @@ export class App extends Yaml<AppOptions> {
       for (const portForward of portForwardOptions) {
         skaffold.addPortForward({
           resourceName: portForward.resourceName || this.appName,
+          resourceType: portForward.resourceType || "Service",
           port: portForward.port || deploymentOptions.port,
           localPort: portForward.localPort,
           namespace: this.namespace,

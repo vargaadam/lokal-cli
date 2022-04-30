@@ -94,10 +94,7 @@ export class Skaffold extends Yaml<SkaffoldOptions> {
   }
 
   addPortForward(portForwardOptions: SkaffoldPortForwardOptions) {
-    this.content.portForward.push({
-      resourceType: "Service",
-      ...portForwardOptions,
-    });
+    this.content.portForward.push(portForwardOptions);
   }
 
   addHelmRelease(
