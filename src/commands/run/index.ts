@@ -3,7 +3,7 @@ import BaseCommand from "../../base-command";
 import { SKAFFOLD_COMMANDS } from "../../content/skaffold";
 import { Workspace } from "../../workspace";
 
-export default class Dev extends BaseCommand {
+export default class Run extends BaseCommand {
   static examples = ["$ lkl dev WORKING_DIR"];
 
   static flags = {
@@ -14,7 +14,7 @@ export default class Dev extends BaseCommand {
   static args = [...BaseCommand.args];
 
   async run() {
-    const { flags } = await this.parse(Dev);
+    const { flags } = await this.parse(Run);
 
     const workspace = new Workspace(
       this.workingDir,
@@ -30,6 +30,6 @@ export default class Dev extends BaseCommand {
 
     this.log("Starting to deploy...");
 
-    await workspace.runSkaffold(SKAFFOLD_COMMANDS.DEV);
+    await workspace.runSkaffold(SKAFFOLD_COMMANDS.RUN);
   }
 }

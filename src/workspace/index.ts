@@ -5,7 +5,7 @@ import { App } from "../app";
 import { Repository } from "./repository";
 import { Yaml } from "../content/base/yaml";
 import { ManifestContainer } from "../app/manifests";
-import { Skaffold } from "../content/skaffold";
+import { Skaffold, SKAFFOLD_COMMANDS } from "../content/skaffold";
 import { HelmRelease, HelmReleaseOptions } from "./helm";
 
 export interface WorkspaceAppOptions {
@@ -133,14 +133,8 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     this.skaffold.persist();
   }
 
-  dev() {
-    child_process.execSync(`skaffold dev -f ${this.skaffold.filePath}`, {
-      stdio: "inherit",
-    });
-  }
-
-  delete() {
-    child_process.execSync(`skaffold delete -f ${this.skaffold.filePath}`, {
+  runSkaffold(command: SKAFFOLD_COMMANDS) {
+    child_process.execSync(`skaffold ${command} -f ${this.skaffold.filePath}`, {
       stdio: "inherit",
     });
   }

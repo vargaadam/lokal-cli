@@ -90,6 +90,7 @@ build:
 * [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
 * [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
 * [`lkl help [COMMAND]`](#lkl-help-command)
+* [`lkl run WORKINGDIR`](#lkl-run-workingdir)
 
 ## `lkl clone WORKINGDIR`
 
@@ -176,4 +177,21 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
+
+## `lkl run WORKINGDIR`
+
+```
+USAGE
+  $ lkl run [WORKINGDIR] [-c <value>] [-o <value>] [--skip-generate]
+
+FLAGS
+  -c, --configFile=<value>  [default: .lokal] The lokal config file name
+  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
+  --skip-generate
+
+EXAMPLES
+  $ lkl dev WORKING_DIR
+```
+
+_See code: [dist/commands/run/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.3.0/dist/commands/run/index.ts)_
 <!-- commandsstop -->

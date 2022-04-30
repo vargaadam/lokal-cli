@@ -1,4 +1,5 @@
 import BaseCommand from "../../base-command";
+import { SKAFFOLD_COMMANDS } from "../../content/skaffold";
 import { Workspace } from "../../workspace";
 
 export default class Delete extends BaseCommand {
@@ -23,6 +24,6 @@ export default class Delete extends BaseCommand {
 
     this.log("Starting to delete...");
 
-    await workspace.delete();
+    await workspace.runSkaffold(SKAFFOLD_COMMANDS.DELETE);
   }
 }
