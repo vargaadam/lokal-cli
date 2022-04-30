@@ -1,13 +1,13 @@
 import fs from "fs";
+import path from "path";
 import YAML from "yaml";
 
 export class Yaml<T> {
   content!: T;
   filePath: string;
-  readonly fileExt = "yaml";
 
   constructor(filePath: string) {
-    this.filePath = filePath.concat(".", this.fileExt);
+    this.filePath = filePath;
   }
 
   load(): T {
@@ -22,6 +22,11 @@ export class Yaml<T> {
     }
 
     const stringifiedContent = YAML.stringify(this.content);
+
+    const dirname = path.dirname(this.filePath);
+    if (!fs.existsSync(dirname)) {
+      fs.mkdirSync(dirname, { recursive: true });
+    }
     fs.writeFileSync(this.filePath, stringifiedContent);
   }
 }

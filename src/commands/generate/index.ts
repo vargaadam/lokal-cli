@@ -19,6 +19,6 @@ export default class Generate extends BaseCommand {
 
     this.log("Generating manifests...");
 
-    await workspace.generateManifests(this.outDir);
+    await workspace.generateManifests();
   }
 }

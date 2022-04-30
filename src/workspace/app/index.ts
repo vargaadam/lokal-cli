@@ -2,7 +2,7 @@ import path from "path";
 import { App } from "../../app";
 import { Repository } from "./repository";
 
-const APP_LOKAL_FILE_NAME = ".lokal";
+const APP_LOKAL_FILE_NAME = ".lokal.yaml";
 
 export interface WorkspaceAppOptions {
   env?: Record<string, string>;

@@ -98,9 +98,6 @@ build:
 # Commands
 <!-- commands -->
 * [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
-* [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
-* [`lkl deploy WORKINGDIR`](#lkl-deploy-workingdir)
-* [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
 * [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
 * [`lkl help [COMMAND]`](#lkl-help-command)
 
@@ -120,56 +117,6 @@ EXAMPLES
 ```
 
 _See code: [dist/commands/clone/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.3.0/dist/commands/clone/index.ts)_
-
-## `lkl delete WORKINGDIR`
-
-```
-USAGE
-  $ lkl delete [WORKINGDIR] [-w <value>] [-o <value>]
-
-FLAGS
-  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
-  -w, --workspace=<value>  [default: .lokal] The workspace config file name
-
-EXAMPLES
-  $ lkl delete WORKING_DIR
-```
-
-_See code: [dist/commands/delete/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.3.0/dist/commands/delete/index.ts)_
-
-## `lkl deploy WORKINGDIR`
-
-```
-USAGE
-  $ lkl deploy [WORKINGDIR] [-w <value>] [-o <value>] [--skip-generate]
-
-FLAGS
-  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
-  -w, --workspace=<value>  [default: .lokal] The workspace config file name
-  --skip-generate
-
-EXAMPLES
-  $ lkl deploy WORKING_DIR
-```
-
-_See code: [dist/commands/deploy/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.3.0/dist/commands/deploy/index.ts)_
-
-## `lkl dev WORKINGDIR`
-
-```
-USAGE
-  $ lkl dev [WORKINGDIR] [-w <value>] [-o <value>] [--skip-generate]
-
-FLAGS
-  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
-  -w, --workspace=<value>  [default: .lokal] The workspace config file name
-  --skip-generate
-
-EXAMPLES
-  $ lkl dev WORKING_DIR
-```
-
-_See code: [dist/commands/dev/index.ts](https://github.com/vargaadam/lokal-cli/blob/v0.3.0/dist/commands/dev/index.ts)_
 
 ## `lkl generate WORKINGDIR`
 
