@@ -1,24 +1,11 @@
 import child_process from "child_process";
 import path, { join } from "path";
 import * as k from "cdk8s";
-import { App } from "../app";
-import { Repository } from "./repository";
 import { Yaml } from "../content/base/yaml";
 import { ManifestContainer } from "../app/manifests";
 import { Skaffold, SKAFFOLD_COMMANDS } from "../content/skaffold";
 import { HelmRelease, HelmReleaseOptions } from "./helm";
-
-export interface WorkspaceAppOptions {
-  name: string;
-  lokalFile?: string;
-  env?: Record<string, string>;
-  repository: {
-    localPath: string;
-    repoUrl?: string;
-    branch?: string;
-  };
-  portForward?: number;
-}
+import { WorkspaceApp, WorkspaceAppOptions } from "./app";
 
 export interface WorkspaceOptions {
   version: string;
@@ -48,48 +35,15 @@ export class Workspace extends Yaml<WorkspaceOptions> {
 
   async cloneApps(isPull: boolean) {
     for (const workspaceAppOptions of this.options.apps || []) {
-      const repositoryOptions = workspaceAppOptions.repository;
-      const repoDir = path.join(this.workingDir, repositoryOptions.localPath);
-      const repository = new Repository(repoDir, workspaceAppOptions.name);
-
-      if (repositoryOptions.repoUrl) {
-        await repository.clone(repositoryOptions.repoUrl);
-      }
-
-      if (repositoryOptions.branch) {
-        await repository.checkoutBranch(repositoryOptions.branch);
-      }
-
-      if (isPull) {
-        await repository.pull();
-      }
-    }
-  }
-
-  async initApps(): Promise<App[]> {
-    const apps = [];
-
-    for (const workspaceAppOptions of this.options.apps || []) {
-      const appConfigFilePath = path.join(
+      const workspaceApp = new WorkspaceApp(
         this.workingDir,
-        workspaceAppOptions.repository.localPath,
-        workspaceAppOptions.lokalFile || ".lokal"
-      );
-
-      const app = new App(
-        this.workingDir,
-        appConfigFilePath,
         workspaceAppOptions
       );
-      apps.push(app);
+      await workspaceApp.cloneApp(isPull);
     }
-
-    return apps;
   }
 
   async generateManifests(outDir: string) {
-    const apps = await this.initApps();
-
     const kApp = new k.App({
       outdir: outDir,
     });
@@ -118,7 +72,13 @@ export class Workspace extends Yaml<WorkspaceOptions> {
       helmRelease.initSkaffold(this.skaffold);
     }
 
-    for (const app of apps) {
+    for (const workspaceAppOptions of this.options.apps || []) {
+      const workspaceApp = new WorkspaceApp(
+        this.workingDir,
+        workspaceAppOptions
+      );
+
+      const app = await workspaceApp.initApp();
       app.initManifests(manifestContainer);
       app.initSkaffold(this.options.namespace, this.skaffold);
     }
