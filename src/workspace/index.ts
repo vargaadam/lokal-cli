@@ -10,6 +10,7 @@ import { WorkspaceApp, WorkspaceAppOptions } from "./app";
 interface CommonWorkspaceOptions<T> {
   name: string;
   groups?: string[];
+  portForward: number;
   spec: T;
 }
 
@@ -91,8 +92,12 @@ export class Workspace extends Yaml<WorkspaceOptions> {
       helmRelease.initSkaffold(this.skaffold);
     }
 
-    for (const { name, lokalFile, spec: workspaceAppOptions } of this.options
-      .apps || []) {
+    for (const {
+      name,
+      lokalFile,
+      spec: workspaceAppOptions,
+      portForward,
+    } of this.options.apps || []) {
       const workspaceApp = new WorkspaceApp(
         name,
         this.options.namespace,
@@ -103,7 +108,7 @@ export class Workspace extends Yaml<WorkspaceOptions> {
 
       const app = workspaceApp.initApp();
       app.initManifests(manifestContainer);
-      app.initSkaffold(this.skaffold);
+      app.initSkaffold(this.skaffold, portForward);
     }
 
     const appManifestFile = path.join(
