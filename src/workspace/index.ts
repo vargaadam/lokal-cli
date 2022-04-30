@@ -51,7 +51,10 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     super(workspaceConfigFilePath);
     this.workingDir = workingDir;
     this.options = this.load();
-    const skaffoldFilePath = path.join(outDir, "skaffold");
+    const skaffoldFilePath = path.join(
+      outDir,
+      this.options.name.concat(".", "skaffold")
+    );
     this.skaffold = new Skaffold(skaffoldFilePath);
   }
 

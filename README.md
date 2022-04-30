@@ -38,8 +38,6 @@ name: foo
 namespace: foo
 helmReleases:
   - name: mongodb
-    groups: # (optional)
-      - resource
     portForward: # (optional)
       - localPort: 3000
         port: 3000 
@@ -48,8 +46,6 @@ helmReleases:
     spec:
       chartPath: ./charts/mongodb
   - name: redis
-    groups: # optional
-      - resource
     spec: 
       repo: https://charts.bitnami.com/bitnami
       remoteChart: redis
@@ -58,8 +54,6 @@ helmReleases:
         - ./charts/redis/values.yaml
 apps:
   - name: app1
-    groups: # (optional)
-      - test
     portForward: # (optional)
       - localPort: 3000
         port: 3000 # (optional) # default: app.deployment.port
@@ -103,28 +97,22 @@ build:
 ```
 # Commands
 <!-- commands -->
-- [loKal](#lokal)
-- [Requirements](#requirements)
-- [Usage](#usage)
-- [Workspace Config](#workspace-config)
-- [App config](#app-config)
-- [Commands](#commands)
-  - [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
-  - [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
-  - [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
-  - [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
-  - [`lkl help [COMMAND]`](#lkl-help-command)
-  - [`lkl run WORKINGDIR`](#lkl-run-workingdir)
+* [`lkl clone WORKINGDIR`](#lkl-clone-workingdir)
+* [`lkl delete WORKINGDIR`](#lkl-delete-workingdir)
+* [`lkl dev WORKINGDIR`](#lkl-dev-workingdir)
+* [`lkl generate WORKINGDIR`](#lkl-generate-workingdir)
+* [`lkl help [COMMAND]`](#lkl-help-command)
+* [`lkl run WORKINGDIR`](#lkl-run-workingdir)
 
 ## `lkl clone WORKINGDIR`
 
 ```
 USAGE
-  $ lkl clone [WORKINGDIR] [-c <value>] [-o <value>] [--pull]
+  $ lkl clone [WORKINGDIR] [-w <value>] [-o <value>] [--pull]
 
 FLAGS
-  -c, --configFile=<value>  [default: .lokal] The lokal config file name
-  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
+  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
+  -w, --workspace=<value>  [default: .lokal] The workspace config file name
   --pull
 
 EXAMPLES
@@ -137,11 +125,11 @@ _See code: [dist/commands/clone/index.ts](https://github.com/vargaadam/lokal-cli
 
 ```
 USAGE
-  $ lkl delete [WORKINGDIR] [-c <value>] [-o <value>]
+  $ lkl delete [WORKINGDIR] [-w <value>] [-o <value>]
 
 FLAGS
-  -c, --configFile=<value>  [default: .lokal] The lokal config file name
-  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
+  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
+  -w, --workspace=<value>  [default: .lokal] The workspace config file name
 
 EXAMPLES
   $ lkl delete WORKING_DIR
@@ -153,11 +141,11 @@ _See code: [dist/commands/delete/index.ts](https://github.com/vargaadam/lokal-cl
 
 ```
 USAGE
-  $ lkl dev [WORKINGDIR] [-c <value>] [-o <value>] [--skip-generate]
+  $ lkl dev [WORKINGDIR] [-w <value>] [-o <value>] [--skip-generate]
 
 FLAGS
-  -c, --configFile=<value>  [default: .lokal] The lokal config file name
-  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
+  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
+  -w, --workspace=<value>  [default: .lokal] The workspace config file name
   --skip-generate
 
 EXAMPLES
@@ -170,11 +158,11 @@ _See code: [dist/commands/dev/index.ts](https://github.com/vargaadam/lokal-cli/b
 
 ```
 USAGE
-  $ lkl generate [WORKINGDIR] [-c <value>] [-o <value>]
+  $ lkl generate [WORKINGDIR] [-w <value>] [-o <value>]
 
 FLAGS
-  -c, --configFile=<value>  [default: .lokal] The lokal config file name
-  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
+  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
+  -w, --workspace=<value>  [default: .lokal] The workspace config file name
 
 EXAMPLES
   $ lkl generate WORKING_DIR
@@ -206,11 +194,11 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.1
 
 ```
 USAGE
-  $ lkl run [WORKINGDIR] [-c <value>] [-o <value>] [--skip-generate]
+  $ lkl run [WORKINGDIR] [-w <value>] [-o <value>] [--skip-generate]
 
 FLAGS
-  -c, --configFile=<value>  [default: .lokal] The lokal config file name
-  -o, --outDir=<value>      [default: .lokal] The generated manifests directory
+  -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
+  -w, --workspace=<value>  [default: .lokal] The workspace config file name
   --skip-generate
 
 EXAMPLES
