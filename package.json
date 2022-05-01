@@ -1,6 +1,6 @@
 {
   "name": "lokal-cli",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "lokal-cli",
   "author": "Adam Varga @vargaadam",
   "bin": {
