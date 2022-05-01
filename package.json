@@ -33,7 +33,7 @@
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.9.4",
     "@types/supports-color": "^8.1.1",
-    "cdk8s-cli": "^1.0.145",
+    "cdk8s-cli": "^1.0.163",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
     "eslint-config-oclif-typescript": "^1.0.2",
