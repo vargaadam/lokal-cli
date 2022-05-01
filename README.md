@@ -109,7 +109,7 @@ USAGE
 
 FLAGS
   -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
-  -w, --workspace=<value>  [default: .lokal] The workspace config file name
+  -w, --workspace=<value>  [default: .lokal.yaml] The workspace config file name
   --pull
 
 EXAMPLES
@@ -126,7 +126,7 @@ USAGE
 
 FLAGS
   -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
-  -w, --workspace=<value>  [default: .lokal] The workspace config file name
+  -w, --workspace=<value>  [default: .lokal.yaml] The workspace config file name
 
 EXAMPLES
   $ lkl generate WORKING_DIR

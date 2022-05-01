@@ -28,10 +28,11 @@
     "yaml": "^1.10.2"
   },
   "devDependencies": {
-    "@oclif/test": "^2",
+    "@oclif/test": "^2.1.0",
     "@types/jest": "^27.4.1",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.9.4",
+    "@types/supports-color": "^8.1.1",
     "cdk8s-cli": "^1.0.145",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
