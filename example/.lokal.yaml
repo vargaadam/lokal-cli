@@ -4,6 +4,10 @@ name: foo
 namespace: foo
 helmReleases:
   - name: redis
+    portForward:
+      - resourceName: redis-master
+        port: 6379
+        localPort: 6379
     spec:
       repo: https://charts.bitnami.com/bitnami
       version: 16.8.5
@@ -16,8 +20,8 @@ helmReleases:
 
 apps:
   - name: service1
-    lokalFile: ".lokal"
-    portForward: 3000
+    portForward:
+      - localPort: 3000
     spec:
       env:
         FOO: "workspaceFoo"
@@ -26,7 +30,8 @@ apps:
         repoUrl: "git@github.com:vargaadam/example-service.git"
         branch: "dev"
   - name: service2
-    portForward: 3001
+    portForward:
+      - localPort: 3001
     spec:
       repository:
         localPath: "./apps/service2"
