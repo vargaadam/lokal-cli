@@ -1,5 +1,5 @@
 import BaseCommand from "../../base-command";
-import { Flags } from "@oclif/core";
+import { CliUx, Flags } from "@oclif/core";
 import { Workspace } from "../../workspace";
 
 export default class Clone extends BaseCommand {
@@ -15,13 +15,18 @@ export default class Clone extends BaseCommand {
   async run() {
     const { flags } = await this.parse(Clone);
 
-    this.log("Initializing repositories...");
+    this.log();
 
     const workspace = new Workspace(
       this.workingDir,
       this.outDir,
       this.workspaceConfigFilePath
     );
+
+    CliUx.ux.config.action.start("Initializing repositories...");
+
     await workspace.cloneApps(flags.pull);
+
+    CliUx.ux.config.action.stop("done");
   }
 }

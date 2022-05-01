@@ -17,8 +17,9 @@
     "/oclif.manifest.json"
   ],
   "dependencies": {
-    "@oclif/core": "^1",
-    "@oclif/plugin-help": "^5",
+    "@oclif/color": "^1.0.1",
+    "@oclif/core": "^1.7.0",
+    "@oclif/plugin-help": "^5.1.12",
     "cdk8s": "^1.5.61",
     "cdk8s-plus-22": "^1.0.0-beta.183",
     "constructs": "^3.3.257",
@@ -38,7 +39,7 @@
     "globby": "^11",
     "jest": "^27.5.1",
     "mock-fs": "^5.1.2",
-    "oclif": "^2",
+    "oclif": "^3.0.1",
     "shx": "^0.3.4",
     "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",
