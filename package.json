@@ -57,16 +57,10 @@
     "topicSeparator": " ",
     "topics": {
       "clone": {
-        "description": "Clone the repository if it's specified"
+        "description": "Clone the repositories if it's specified"
       },
       "generate": {
         "description": "Generate the required manifests"
-      },
-      "dev": {
-        "description": "Start local dev"
-      },
-      "delete": {
-        "description": "Delete the resources"
       }
     }
   },
@@ -76,7 +70,7 @@
     "pack": "oclif pack tarballs",
     "prepack": "npm run build && oclif manifest && oclif readme",
     "test": "jest --watchAll --no-cache",
-    "version": "oclif readme && git add README.md"
+    "version": "npm run build && oclif readme && git add README.md"
   },
   "engines": {
     "node": ">=12.0.0"

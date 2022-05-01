@@ -74,7 +74,11 @@ export class Workspace extends Yaml<WorkspaceOptions> {
     }
   }
 
-  async generateManifests() {
+  async generateManifests(reset: boolean) {
+    if (reset) {
+      this.remove(this.outDir);
+    }
+
     if (this.options.apps) {
       this.addAppsManifests();
     }

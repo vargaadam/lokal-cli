@@ -55,6 +55,8 @@ export interface SkaffoldOptions {
 }
 
 export class Skaffold extends Yaml<SkaffoldOptions> {
+  content: SkaffoldOptions;
+
   constructor(skaffoldFilePath: string) {
     super(skaffoldFilePath);
 

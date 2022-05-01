@@ -122,11 +122,12 @@ _See code: [dist/commands/clone/index.ts](https://github.com/vargaadam/lokal-cli
 
 ```
 USAGE
-  $ lkl generate [WORKINGDIR] [-w <value>] [-o <value>]
+  $ lkl generate [WORKINGDIR] [-w <value>] [-o <value>] [--reset]
 
 FLAGS
   -o, --outDir=<value>     [default: .lokal] The directory of the generated manifests
   -w, --workspace=<value>  [default: .lokal.yaml] The workspace config file name
+  --reset                  Removes the output directory before generating
 
 EXAMPLES
   $ lkl generate WORKING_DIR

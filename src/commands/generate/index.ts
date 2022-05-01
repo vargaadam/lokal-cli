@@ -1,6 +1,6 @@
 import BaseCommand from "../../base-command";
 import { Workspace } from "../../workspace";
-import { CliUx } from "@oclif/core";
+import { CliUx, Flags } from "@oclif/core";
 import color from "@oclif/color";
 import path from "path";
 
@@ -9,11 +9,18 @@ export default class Generate extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
+    reset: Flags.boolean({
+      default: false,
+      required: false,
+      description: "Removes the output directory before generating",
+    }),
   };
 
   static args = [...BaseCommand.args];
 
   async run() {
+    const { flags } = await this.parse(Generate);
+
     const workspace = new Workspace(
       this.workingDir,
       this.outDir,
@@ -22,7 +29,7 @@ export default class Generate extends BaseCommand {
 
     CliUx.ux.config.action.start("Generating manifests");
 
-    await workspace.generateManifests();
+    await workspace.generateManifests(flags.reset);
 
     CliUx.ux.action.stop("done");
 
