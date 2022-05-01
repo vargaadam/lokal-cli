@@ -50,6 +50,10 @@ export default class Generate extends BaseCommand {
         `skaffold deploy -f ${relativeSkaffoldFilePath} --port-forward=user`
       )
     );
+    CliUx.ux.log(color.grey("Delete your deployments with:"));
+    CliUx.ux.log(
+      color.blueBright(`skaffold delete -f ${relativeSkaffoldFilePath}`)
+    );
     CliUx.ux.log(color.gray("More Info:", "https://skaffold.dev/docs/"));
   }
 }
