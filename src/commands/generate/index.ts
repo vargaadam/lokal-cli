@@ -32,7 +32,7 @@ export default class Generate extends BaseCommand {
     );
 
     CliUx.ux.log(
-      color.gray("To start your local deployment run the following command:")
+      color.gray("To start your local development run the following command:")
     );
     CliUx.ux.log(
       color.blueBright(`skaffold dev -f ${relativeSkaffoldFilePath}`)
