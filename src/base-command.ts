@@ -1,7 +1,7 @@
 import { Command, Flags } from "@oclif/core";
 import path from "path";
 
-const CONFIG_FILE_NAME = ".lokal";
+const CONFIG_FILE_NAME = ".lokal.yaml";
 const OUTPUT_DIR_NAME = ".lokal";
 
 export default abstract class BaseCommand extends Command {
