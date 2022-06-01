@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@oclif/test": "^2.1.0",
-    "@types/jest": "^27.4.1",
+    "@types/jest": "^27.5.1",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.9.4",
     "@types/supports-color": "^8.1.1",
