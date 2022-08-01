@@ -24,7 +24,7 @@
     "cdk8s-plus-22": "^1.0.0-beta.183",
     "constructs": "^3.3.257",
     "dotenv": "^16.0.0",
-    "simple-git": "^3.6.0",
+    "simple-git": "^3.11.0",
     "yaml": "^1.10.2"
   },
   "devDependencies": {
