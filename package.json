@@ -39,7 +39,7 @@
     "eslint-config-oclif-typescript": "^1.0.2",
     "globby": "^11",
     "jest": "^27.5.1",
-    "mock-fs": "^5.1.2",
+    "mock-fs": "^5.1.4",
     "oclif": "^3.0.1",
     "shx": "^0.3.4",
     "ts-jest": "^27.1.4",
